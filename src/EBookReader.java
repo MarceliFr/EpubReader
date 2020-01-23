@@ -2,8 +2,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -57,14 +59,20 @@ public class EBookReader {
     }
     
     Metadata readMetadata() {
+        Node metadataNode = (findNode(content, "metadata", true));
         Metadata metadata = new Metadata();
-        metadata.setTitle((findNode(content, "dc:title", true)).getTextContent());
-        metadata.setAutor((findNode(content, "dc:creator", true)).getTextContent());
-        Node publisher = (findNode(content, "dc:publisher", true));
-        if(publisher != null){
-            metadata.setPublisher((findNode(content, "dc:publisher", true)).getTextContent());
-        }
+        metadata.setTitle((findNode(metadataNode, "dc:title", true)).getTextContent());
+        metadata.setAutor((findNode(metadataNode, "dc:creator", true)).getTextContent());
         metadata.setDate((findNode(content, "dc:date", true)).getTextContent());
+        
+        if(findNode(metadataNode, "dc:publisher", true) != null){
+            metadata.setPublisher(findNode(metadataNode, "dc:publisher", true).getTextContent());
+        }
+        for(int i=0;i<findNodeList(metadataNode, "dc:subject", true).size();i++){
+            metadata.addSubject((findNodeList(metadataNode, "dc:subject", true)).get(i).getTextContent());
+        }
+        System.out.println(metadata.getPublisher());
+        System.out.println(metadata.getSubjects().toString());
         return metadata;
     }
     public Node findNode(Node root, String elementName, boolean deep) {
@@ -93,5 +101,19 @@ public class EBookReader {
                 }
             }
         return matchingNode;
+    }
+    public List<Node> findNodeList(Node root, String elementName, boolean deep){
+        //Check to see if root has any children if not return null
+        if (!(root.hasChildNodes())){
+            return null;
+        }
+        List<Node> nodeList = new ArrayList<>();
+        for(int i=0;i<root.getChildNodes().getLength();i++){
+            Node element = root.getChildNodes().item(i);
+            if (element.getNodeName().equals(elementName)){
+                nodeList.add(element);
+            }
+        }
+        return nodeList;
     }
 }
