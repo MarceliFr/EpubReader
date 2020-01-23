@@ -1,14 +1,11 @@
 class EdytujMetadane extends javax.swing.JDialog {
+    private final EBook eBook;
     
-    private final Metadata metadata;
-
-    public EdytujMetadane() {
+    public EdytujMetadane(EBook eBook) {
+        this.eBook = eBook;
         initComponents();
     }
-
-    EdytujMetadane() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -29,27 +26,21 @@ class EdytujMetadane extends javax.swing.JDialog {
         titleLabel.setText("Tytył");
 
         titleText.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        try{
-            titleText.setText(ebook.readMetadata("dc:title"));
-        }catch (Exception e){}
+        titleText.setText(eBook.getMetadata().getTitle());
 
         authorLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         authorLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         authorLabel.setText("Autor");
 
         authorText.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        try{
-            authorText.setText(ebook.readMetadata("dc:creator"));
-        }catch (Exception e){}
+        authorText.setText(eBook.getMetadata().getAutor());
 
         publisherLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         publisherLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         publisherLabel.setText("Publisher");
 
         publisherText.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        try{
-            publisherText.setText(ebook.readMetadata("dc:publisher"));
-        }catch (Exception e){}
+        publisherText.setText(eBook.getMetadata().getPublisher());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

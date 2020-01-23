@@ -88,7 +88,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="try{&#xa;    titleText.setText(ebook.readMetadata(&quot;dc:title&quot;));&#xa;}catch (Exception e){}"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="titleText.setText(eBook.getMetadata().getTitle());"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="authorLabel">
@@ -107,7 +107,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="try{&#xa;    authorText.setText(ebook.readMetadata(&quot;dc:creator&quot;));&#xa;}catch (Exception e){}"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="authorText.setText(eBook.getMetadata().getAutor());"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="publisherLabel">
@@ -126,7 +126,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="try{&#xa;    publisherText.setText(ebook.readMetadata(&quot;dc:publisher&quot;));&#xa;}catch (Exception e){}"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="publisherText.setText(eBook.getMetadata().getPublisher());"/>
       </AuxValues>
     </Component>
   </SubComponents>

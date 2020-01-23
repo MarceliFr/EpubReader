@@ -11,6 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 public class EpubReader_Marceli extends javax.swing.JFrame {
     private final javax.swing.JFileChooser jfc = new JFileChooser();
@@ -206,7 +207,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | ParserConfigurationException ex) {
+        } catch (IOException | ParserConfigurationException | SAXException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
         DefaultListModel lm1 = new DefaultListModel();
@@ -226,8 +227,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     }//GEN-LAST:event_plikZnajdzPublikacjeActionPerformed
 
     private void publikacjaEdytujMetadaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaEdytujMetadaneActionPerformed
-        EdytujMetadane edytujMetadane = new EdytujMetadane();
-        
+        EdytujMetadane edytujMetadane = new EdytujMetadane(eBook);
         edytujMetadane.setVisible(true);
     }//GEN-LAST:event_publikacjaEdytujMetadaneActionPerformed
 
@@ -238,7 +238,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
 
     private void spineListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_spineListValueChanged
         try {
-            String text = eBook.readTextFromSpine(((JList)evt.getSource()).getSelectedValue());
+            String text = eBook.readTextFromSpine(((JList)evt.getSource()).getSelectedValue().toString());
             eBookText.setText(text);
         } catch (IOException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
@@ -247,13 +247,12 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
 
     private void guideListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_guideListValueChanged
         try {
-            String text = eBook.readTextFromGuide(((JList)evt.getSource()).getSelectedValue());
+            String text = eBook.readTextFromGuide(((JList)evt.getSource()).getSelectedValue().toString());
             eBookText.setText(text);
         } catch (IOException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_guideListValueChanged
-
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             new EpubReader_Marceli().setVisible(true);
