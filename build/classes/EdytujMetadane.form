@@ -44,9 +44,12 @@
                       <Component id="publisherText" min="-2" pref="287" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="przedmiotyLabel1" pref="84" max="32767" attributes="0"/>
+                      <Component id="temetyLabel" pref="84" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" pref="287" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="dodajTematButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="jScrollPane1" min="-2" pref="287" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -73,10 +76,12 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="przedmiotyLabel1" min="-2" max="-2" attributes="0"/>
+                  <Component id="temetyLabel" min="-2" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="194" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="dodajTematButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="162" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -139,13 +144,13 @@
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="publisherText.setText(eBook.getMetadata().getPublisher());"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JLabel" name="przedmiotyLabel1">
+    <Component class="javax.swing.JLabel" name="temetyLabel">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="16" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="4"/>
-        <Property name="text" type="java.lang.String" value="Przedmioty"/>
+        <Property name="text" type="java.lang.String" value="Tematyka"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -155,17 +160,25 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTextArea" name="przedmiotyText">
+        <Component class="javax.swing.JTextArea" name="tematyText">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="3"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="for(int i=0;i&lt;eBook.getMetadata().getSubjects().size();i++){&#xa;    przedmiotyText.append(eBook.getMetadata().getSubjects().get(i)+&quot;\n&quot;);&#xa;}"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="for(int i=0;i&lt;eBook.getMetadata().getSubjects().size();i++){&#xa;    tematyText.append(eBook.getMetadata().getSubjects().get(i)+&quot;\n&quot;);&#xa;}"/>
           </AuxValues>
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="dodajTematButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Dodaj"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dodajTematButtonActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

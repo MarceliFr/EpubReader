@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.w3c.dom.Node;
 
 import static org.w3c.dom.Node.ELEMENT_NODE;
@@ -18,7 +19,7 @@ class EBook {
     private final Map<String, String> guideMap = new HashMap<>();
     Metadata metadata;
       
-    public EBook(String path) throws FileNotFoundException, IOException, ParserConfigurationException, SAXException {
+    public EBook(String path) throws FileNotFoundException, IOException, ParserConfigurationException, SAXException, TransformerException {
         //EpubReader epb = new EpubReader();
         //publikacja = epb.readEpub(new FileInputStream(path));
         eBookReader = new EBookReader(path);

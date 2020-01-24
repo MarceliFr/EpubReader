@@ -12,52 +12,56 @@ import java.util.zip.ZipFile;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class EBookReader {
-    public final String path;
+    private final String path;
+    private final ZipFile zFile;
     private final Document content;
     
-    public EBookReader(String path) throws ParserConfigurationException, IOException, SAXException{
+    public EBookReader(String path) throws IOException, ParserConfigurationException, TransformerException, SAXException{
         this.path = path;
+        zFile = new ZipFile(path);
         DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        InputStream is = getInput("content.opf");
-        content = dBuilder.parse(is);
+        try (InputStream is = zFile.getInputStream(getZipEntry("content.opf"))) {
+            content = dBuilder.parse(is);
+        }
+        //appendNode();
     }
     public Document getDocument(){
         return content;
     }
-    
-    public String readTextFromFile(String fileName) throws IOException {
-        InputStream is = getInput(fileName);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null){
-            sb.append(line).append("\n");
-        }
-	String htmltext = sb.toString();
-        htmltext = htmltext.replaceAll("\\<.*?\\>", "");
-        return htmltext;
-    }
-    private InputStream getInput(String fileName) throws IOException {
-        ZipFile zFile = new ZipFile(path);
+    private ZipEntry getZipEntry(String fileName) throws IOException {
         ZipEntry zEntry = null;
         Enumeration zEntries = zFile.entries();
         while (zEntries.hasMoreElements()) {
             zEntry = zFile.getEntry(((ZipEntry)zEntries.nextElement()).getName());
             if(zEntry.getName().endsWith(fileName)){
-                InputStream is = zFile.getInputStream(zEntry);
-                return is;
+                return zEntry;
             }
         }
         return null;
     }
-    
+    public String readTextFromFile(String fileName) throws IOException {
+        StringBuilder sb;
+        try (InputStream is = zFile.getInputStream(getZipEntry(fileName))) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null){
+                sb.append(line).append("\n");
+            }
+        }
+	String htmltext = sb.toString();
+        htmltext = htmltext.replaceAll("\\<.*?\\>", "");
+        return htmltext;
+    }
     Metadata readMetadata() {
         Node metadataNode = (findNode(content, "metadata", true));
         Metadata metadata = new Metadata();
@@ -71,8 +75,6 @@ public class EBookReader {
         for(int i=0;i<findNodeList(metadataNode, "dc:subject", true).size();i++){
             metadata.addSubject((findNodeList(metadataNode, "dc:subject", true)).get(i).getTextContent());
         }
-        System.out.println(metadata.getPublisher());
-        System.out.println(metadata.getSubjects().toString());
         return metadata;
     }
     public Node findNode(Node root, String elementName, boolean deep) {
@@ -115,5 +117,13 @@ public class EBookReader {
             }
         }
         return nodeList;
+    }
+    private void appendNode() throws IOException, TransformerException{
+        Element metadataNode = (Element) findNode(content, "metadata", true);
+        Element subject = content.createElement("subject4");
+        subject.appendChild(content.createTextNode("text5"));
+        metadataNode.appendChild(subject);
+        zFile.close();
+        EBookWriter.saveContentChanges(path, content);
     }
 }

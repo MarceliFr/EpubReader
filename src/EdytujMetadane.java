@@ -16,9 +16,10 @@ class EdytujMetadane extends javax.swing.JDialog {
         authorText = new javax.swing.JTextField();
         publisherLabel = new javax.swing.JLabel();
         publisherText = new javax.swing.JTextField();
-        przedmiotyLabel1 = new javax.swing.JLabel();
+        temetyLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        przedmiotyText = new javax.swing.JTextArea();
+        tematyText = new javax.swing.JTextArea();
+        dodajTematButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edytuj metadane");
@@ -45,17 +46,24 @@ class EdytujMetadane extends javax.swing.JDialog {
         publisherText.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         publisherText.setText(eBook.getMetadata().getPublisher());
 
-        przedmiotyLabel1.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        przedmiotyLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        przedmiotyLabel1.setText("Przedmioty");
+        temetyLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        temetyLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        temetyLabel.setText("Tematyka");
 
-        przedmiotyText.setEditable(false);
-        przedmiotyText.setColumns(20);
-        przedmiotyText.setRows(3);
+        tematyText.setEditable(false);
+        tematyText.setColumns(20);
+        tematyText.setRows(3);
         for(int i=0;i<eBook.getMetadata().getSubjects().size();i++){
-            przedmiotyText.append(eBook.getMetadata().getSubjects().get(i)+"\n");
+            tematyText.append(eBook.getMetadata().getSubjects().get(i)+"\n");
         }
-        jScrollPane1.setViewportView(przedmiotyText);
+        jScrollPane1.setViewportView(tematyText);
+
+        dodajTematButton.setText("Dodaj");
+        dodajTematButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dodajTematButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -77,9 +85,11 @@ class EdytujMetadane extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(publisherText, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(przedmiotyLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                        .addComponent(temetyLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dodajTematButton)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -99,22 +109,29 @@ class EdytujMetadane extends javax.swing.JDialog {
                     .addComponent(publisherText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(przedmiotyLabel1)
+                    .addComponent(temetyLabel)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(194, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dodajTematButton)
+                .addContainerGap(162, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void dodajTematButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dodajTematButtonActionPerformed
+        System.out.println("Temat");
+    }//GEN-LAST:event_dodajTematButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel authorLabel;
     private javax.swing.JTextField authorText;
+    private javax.swing.JButton dodajTematButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel przedmiotyLabel1;
-    private javax.swing.JTextArea przedmiotyText;
     private javax.swing.JLabel publisherLabel;
     private javax.swing.JTextField publisherText;
+    private javax.swing.JTextArea tematyText;
+    private javax.swing.JLabel temetyLabel;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JTextField titleText;
     // End of variables declaration//GEN-END:variables

@@ -11,6 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 public class EpubReader_Marceli extends javax.swing.JFrame {
@@ -207,7 +208,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | ParserConfigurationException | SAXException ex) {
+        } catch (IOException | ParserConfigurationException | SAXException | TransformerException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
         DefaultListModel lm1 = new DefaultListModel();
