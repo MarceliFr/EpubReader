@@ -21,18 +21,22 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class EBookReader {
-    private final String path;
-    private final ZipFile zFile;
+    private final String eBookPath;
+    private ZipFile zFile;
     private final Document content;
+    private final String contentPath;
     
     public EBookReader(String path) throws IOException, ParserConfigurationException, TransformerException, SAXException{
-        this.path = path;
+        this.eBookPath = path;
         zFile = new ZipFile(path);
         DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        ZipEntry ze = getZipEntry("content.opf");
+        contentPath = ze.toString();
+        System.out.println(contentPath);
         try (InputStream is = zFile.getInputStream(getZipEntry("content.opf"))) {
             content = dBuilder.parse(is);
         }
-        //appendNode();
+        appendNode();
     }
     public Document getDocument(){
         return content;
@@ -62,15 +66,16 @@ public class EBookReader {
         htmltext = htmltext.replaceAll("\\<.*?\\>", "");
         return htmltext;
     }
-    Metadata readMetadata() {
+    public Metadata readMetadata() {
         Node metadataNode = (findNode(content, "metadata", true));
         Metadata metadata = new Metadata();
+        for(int i=0;i<findNodeList(metadataNode, "dc:creator", true).size();i++){
+            metadata.addCreator((findNodeList(metadataNode, "dc:creator", true)).get(i).getTextContent());
+        }
         metadata.setTitle((findNode(metadataNode, "dc:title", true)).getTextContent());
-        metadata.setAutor((findNode(metadataNode, "dc:creator", true)).getTextContent());
         metadata.setDate((findNode(content, "dc:date", true)).getTextContent());
-        
-        if(findNode(metadataNode, "dc:publisher", true) != null){
-            metadata.setPublisher(findNode(metadataNode, "dc:publisher", true).getTextContent());
+        for(int i=0;i<findNodeList(metadataNode, "dc:publisher", true).size();i++){
+            metadata.addPublisher((findNodeList(metadataNode, "dc:publisher", true)).get(i).getTextContent());
         }
         for(int i=0;i<findNodeList(metadataNode, "dc:subject", true).size();i++){
             metadata.addSubject((findNodeList(metadataNode, "dc:subject", true)).get(i).getTextContent());
@@ -120,10 +125,11 @@ public class EBookReader {
     }
     private void appendNode() throws IOException, TransformerException{
         Element metadataNode = (Element) findNode(content, "metadata", true);
-        Element subject = content.createElement("subject4");
-        subject.appendChild(content.createTextNode("text5"));
+        Element subject = content.createElement("subject6");
+        subject.appendChild(content.createTextNode("textja"));
         metadataNode.appendChild(subject);
         zFile.close();
-        EBookWriter.saveContentChanges(path, content);
+        EBookWriter.saveContentChanges(eBookPath, contentPath, content);
+        zFile = new ZipFile(eBookPath);
     }
 }

@@ -74,9 +74,17 @@
                 <Property name="text" type="java.lang.String" value="Dodaj ok&#x142;adk&#x119;"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="showMetadane">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Poka&#x17c; metadane"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showMetadaneActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="publikacjaEdytujMetadane">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Edytuj Metadane"/>
+                <Property name="text" type="java.lang.String" value="Edytuj metadane"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="publikacjaEdytujMetadaneActionPerformed"/>

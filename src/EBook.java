@@ -7,9 +7,9 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+
 import org.w3c.dom.Node;
 
-import static org.w3c.dom.Node.ELEMENT_NODE;
 import org.xml.sax.SAXException;
 
 class EBook {
@@ -19,7 +19,7 @@ class EBook {
     private final Map<String, String> guideMap = new HashMap<>();
     Metadata metadata;
       
-    public EBook(String path) throws FileNotFoundException, IOException, ParserConfigurationException, SAXException, TransformerException {
+    public EBook(String path) throws FileNotFoundException, IOException, ParserConfigurationException, TransformerException, SAXException{
         //EpubReader epb = new EpubReader();
         //publikacja = epb.readEpub(new FileInputStream(path));
         eBookReader = new EBookReader(path);
@@ -40,7 +40,7 @@ class EBook {
         if(spineNode.hasChildNodes()){
             for(int i=0;i<spineNode.getChildNodes().getLength();i++){
                 Node spineElement = spineNode.getChildNodes().item(i);
-                if(spineElement.getNodeType() == ELEMENT_NODE){
+                if(spineElement.getNodeType() == 1){
                     key = spineElement.getAttributes().getNamedItem("idref").getNodeValue();
                     value = (findHref(key));
                     spineMap.put(key, value);
@@ -55,7 +55,7 @@ class EBook {
         if(manifestNode.hasChildNodes()){
             for(int i=0;i<manifestNode.getChildNodes().getLength();i++){
                 Node manifestElement = manifestNode.getChildNodes().item(i);
-                if((manifestElement.getNodeType() == ELEMENT_NODE) && (manifestElement.getAttributes().getNamedItem("id").getNodeValue().equals(key))){
+                if((manifestElement.getNodeType() == 1) && (manifestElement.getAttributes().getNamedItem("id").getNodeValue().equals(key))){
                     return manifestElement.getAttributes().getNamedItem("href").getNodeValue();
                 }
             }
@@ -71,7 +71,7 @@ class EBook {
         if(guideNode != null && guideNode.hasChildNodes()){
             for(int i=0;i<guideNode.getChildNodes().getLength();i++){
                 Node guideElement = guideNode.getChildNodes().item(i);
-                if(guideElement.getNodeType() == ELEMENT_NODE){
+                if(guideElement.getNodeType() == 1){
                     key = guideElement.getAttributes().getNamedItem("title").getNodeValue();
                     value = guideElement.getAttributes().getNamedItem("href").getNodeValue();
                     guideMap.put(key, value);

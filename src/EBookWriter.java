@@ -26,7 +26,7 @@ import org.w3c.dom.Document;
 
 class EBookWriter {
 
-    static void saveContentChanges(String path, Document content) throws TransformerConfigurationException, IOException, TransformerException {
+    static void saveContentChanges(String path, String targetPath, Document content) throws TransformerConfigurationException, IOException, TransformerException {
         DOMSource source = new DOMSource(content);
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
@@ -36,7 +36,7 @@ class EBookWriter {
         Path p = Paths.get(path);
         URI uri = URI.create("jar:" + p.toUri());
         try (FileSystem fs = FileSystems.newFileSystem(uri, env)){
-            Path nf = fs.getPath("OEBPS/content.opf");
+            Path nf = fs.getPath(targetPath);
             try (Writer writer = Files.newBufferedWriter(nf, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
                 StreamResult result = new StreamResult(writer);
                 transformer.transform(source, result);

@@ -2,9 +2,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.DefaultListModel;
 
 import javax.swing.JFileChooser;
@@ -48,6 +48,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         plikZamknij = new javax.swing.JMenuItem();
         menuPublikacja = new javax.swing.JMenu();
         publikacjaDodajOkladke = new javax.swing.JMenuItem();
+        showMetadane = new javax.swing.JMenuItem();
         publikacjaEdytujMetadane = new javax.swing.JMenuItem();
         menuNawigacja = new javax.swing.JMenu();
 
@@ -172,7 +173,15 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         publikacjaDodajOkladke.setText("Dodaj okładkę");
         menuPublikacja.add(publikacjaDodajOkladke);
 
-        publikacjaEdytujMetadane.setText("Edytuj Metadane");
+        showMetadane.setText("Pokaż metadane");
+        showMetadane.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showMetadaneActionPerformed(evt);
+            }
+        });
+        menuPublikacja.add(showMetadane);
+
+        publikacjaEdytujMetadane.setText("Edytuj metadane");
         publikacjaEdytujMetadane.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 publikacjaEdytujMetadaneActionPerformed(evt);
@@ -254,6 +263,11 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_guideListValueChanged
+
+    private void showMetadaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMetadaneActionPerformed
+        PokazMetadane pokazMetadane = new PokazMetadane(eBook);
+        pokazMetadane.setVisible(true);
+    }//GEN-LAST:event_showMetadaneActionPerformed
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             new EpubReader_Marceli().setVisible(true);
@@ -283,6 +297,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     private javax.swing.JTree plikiTree;
     private javax.swing.JMenuItem publikacjaDodajOkladke;
     private javax.swing.JMenuItem publikacjaEdytujMetadane;
+    private javax.swing.JMenuItem showMetadane;
     private javax.swing.JList<String> spineList;
     // End of variables declaration//GEN-END:variables
 }

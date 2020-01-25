@@ -3,38 +3,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Metadata {
+    private List<String> creators = new ArrayList<>();
     private String title;
-    private String autor;
-    private String publisher;
+    private List<String> publishers = new ArrayList<>();
     private String date;
     private List<String> subjects = new ArrayList<>();
     
     public Metadata(){}
-    public Metadata(String title, String autor, String publisher, String date, List<String> subjects){
+    public Metadata(List<String> creators, String title, List<String> publishers, String date, List<String> subjects){
+        this.creators = creators;
         this.title = title;
-        this.autor = autor;
-        this.publisher = publisher;
+        this.publishers = publishers;
         this.date = date;
         this.subjects = subjects;
     }
-    
+    public void setCreators(List<String> creators){
+        this.creators = creators;
+    }
+    public void addCreator(String creator){
+        creators.add(creator);
+    }
+    public List<String> getCreators(){
+        return creators;
+    }
     public void setTitle(String title){
         this.title = title;
     }
     public String getTitle(){
         return title;
     }
-    public void setAutor(String autor){
-        this.autor = autor;
+    public void setPublishers(List<String> publishers){
+        this.publishers = publishers;
     }
-    public String getAutor(){
-        return autor;
+    public void addPublisher(String publisher){
+        publishers.add(publisher);
     }
-    public void setPublisher(String publisher){
-        this.publisher = publisher;
-    }
-    public String getPublisher(){
-        return publisher;
+    public List<String> getPublishers(){
+        return publishers;
     }
     public void setDate(String date){
         this.date = date;
