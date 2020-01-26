@@ -1,6 +1,4 @@
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +14,7 @@ import org.xml.sax.SAXException;
 
 public class EpubReader_Marceli extends javax.swing.JFrame {
     private final javax.swing.JFileChooser jfc = new JFileChooser();
+    private EBookReader eBookReader;
     private EBook eBook;
     private String path;
     
@@ -209,35 +208,26 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         jfc.setName("Znadjowanie E-Booków");
         path = jfc.getSelectedFile().getAbsolutePath();
         try {
-            eBook = new EBook(path);
-            List<String> pliki = eBook.wypelnij_plikiTree();
-//            for(int i=0;i<pliki.size();i++){
-//                System.out.println(pliki.get(i));
-//            }
-            
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | ParserConfigurationException | SAXException | TransformerException ex) {
+            eBookReader = new EBookReader(path);
+            eBook = eBookReader.readEBook();
+        } catch (IOException | ParserConfigurationException | TransformerException | SAXException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
         DefaultListModel lm1 = new DefaultListModel();
-        Set<String> spineKeys = eBook.wypelnij_spine();
+        Set<String> spineKeys = eBook.getSpineKeys();
         spineList.setModel(lm1);
         spineKeys.forEach((_item) -> {lm1.addElement(_item);
         });
-        
         DefaultListModel lm2 = new DefaultListModel();
-        Set<String> guideKeys = eBook.wypelnij_guide();
+        Set<String> guideKeys = eBook.getGuideKeys();
         guideList.setModel(lm2);
         guideKeys.forEach((_item) -> {lm2.addElement(_item);
         });
-        
         menuPublikacja.setEnabled(true);
-        //jLabel1.setText(eBook.getTitle());
     }//GEN-LAST:event_plikZnajdzPublikacjeActionPerformed
 
     private void publikacjaEdytujMetadaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaEdytujMetadaneActionPerformed
-        EdytujMetadane edytujMetadane = new EdytujMetadane(eBook);
+        EdytujMetadane edytujMetadane = new EdytujMetadane(eBook.getMetadata());
         edytujMetadane.setVisible(true);
     }//GEN-LAST:event_publikacjaEdytujMetadaneActionPerformed
 
@@ -248,7 +238,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
 
     private void spineListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_spineListValueChanged
         try {
-            String text = eBook.readTextFromSpine(((JList)evt.getSource()).getSelectedValue().toString());
+            String text = eBookReader.readTextFromSpine(((JList)evt.getSource()).getSelectedValue().toString());
             eBookText.setText(text);
         } catch (IOException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
@@ -257,7 +247,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
 
     private void guideListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_guideListValueChanged
         try {
-            String text = eBook.readTextFromGuide(((JList)evt.getSource()).getSelectedValue().toString());
+            String text = eBookReader.readTextFromGuide(((JList)evt.getSource()).getSelectedValue().toString());
             eBookText.setText(text);
         } catch (IOException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);

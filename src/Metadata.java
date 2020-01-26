@@ -8,15 +8,12 @@ class Metadata {
     private List<String> publishers = new ArrayList<>();
     private String date;
     private List<String> subjects = new ArrayList<>();
+    private String source;
+    private List<String> rights = new ArrayList<>();
+    private String language;
     
     public Metadata(){}
-    public Metadata(List<String> creators, String title, List<String> publishers, String date, List<String> subjects){
-        this.creators = creators;
-        this.title = title;
-        this.publishers = publishers;
-        this.date = date;
-        this.subjects = subjects;
-    }
+    
     public void setCreators(List<String> creators){
         this.creators = creators;
     }
@@ -55,5 +52,26 @@ class Metadata {
     }
     public List<String> getSubjects(){
         return subjects;
+    }
+    public void setSource(String source){
+        this.source = source;
+    }
+    public String getSource(){
+        return source;
+    }
+    public void setRights(List<String> rights){
+        this.rights = rights;
+    }
+    public void addRight(String right){
+        rights.add(right);
+    }
+    public List<String> getRights(){
+        return rights;
+    }
+    public void setLanguage(String language){
+        this.language = language;
+    }
+    public String getLanguage(){
+        return language;
     }
 }
