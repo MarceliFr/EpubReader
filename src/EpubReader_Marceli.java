@@ -9,7 +9,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 public class EpubReader_Marceli extends javax.swing.JFrame {
@@ -99,11 +98,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Pliki", jScrollPane1);
 
-        spineList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        spineList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         spineList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 spineListValueChanged(evt);
@@ -113,11 +108,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Spine", jScrollPane2);
 
-        guideList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        guideList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         guideList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 guideListValueChanged(evt);
@@ -210,7 +201,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         try {
             eBookReader = new EBookReader(path);
             eBook = eBookReader.readEBook();
-        } catch (IOException | ParserConfigurationException | TransformerException | SAXException ex) {
+        } catch (IOException | ParserConfigurationException | SAXException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
         DefaultListModel lm1 = new DefaultListModel();
@@ -227,8 +218,12 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     }//GEN-LAST:event_plikZnajdzPublikacjeActionPerformed
 
     private void publikacjaEdytujMetadaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaEdytujMetadaneActionPerformed
-        EdytujMetadane edytujMetadane = new EdytujMetadane(eBook.getMetadata());
-        edytujMetadane.setVisible(true);
+        try {
+            EdytujMetadane edytujMetadane = new EdytujMetadane(eBook);
+            edytujMetadane.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_publikacjaEdytujMetadaneActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed

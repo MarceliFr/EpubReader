@@ -306,7 +306,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="if(eBook.getMetadata().getPublishers()!= null){&#xa;    for(int i=0;i&lt;eBook.getMetadata().getPublishers().size();i++){&#xa;        if(i == (eBook.getMetadata().getPublishers().size())-1){&#xa;            creatorsText.append(eBook.getMetadata().getPublishers().get(i));&#xa;        }else{&#xa;            creatorsText.append(eBook.getMetadata().getPublishers().get(i) + &quot;\n&quot;);&#xa;        }&#xa;    }&#xa;}"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="if(eBook.getMetadata().getPublishers()!= null){&#xa;    for(int i=0;i&lt;eBook.getMetadata().getPublishers().size();i++){&#xa;        if(i == (eBook.getMetadata().getPublishers().size())-1){&#xa;            publishersText.append(eBook.getMetadata().getPublishers().get(i));&#xa;        }else{&#xa;            publishersText.append(eBook.getMetadata().getPublishers().get(i) + &quot;\n&quot;);&#xa;        }&#xa;    }&#xa;}"/>
           </AuxValues>
         </Component>
       </SubComponents>

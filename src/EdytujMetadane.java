@@ -1,11 +1,14 @@
 
+import java.io.IOException;
 import javax.swing.JOptionPane;
 
 class EdytujMetadane extends javax.swing.JDialog {
-    private final Metadata metadata;
+    private final EBook eBook;
+    private final EBookWriter eBookWriter;
     
-    public EdytujMetadane(Metadata metadata) {
-        this.metadata = metadata;
+    public EdytujMetadane(EBook eBook) throws IOException {
+        this.eBook = eBook;
+        eBookWriter = new EBookWriter(eBook);
         initComponents();
     }
     
@@ -13,21 +16,32 @@ class EdytujMetadane extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        authorLabel = new javax.swing.JLabel();
-        addAuthor = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        creatorLabel = new javax.swing.JLabel();
+        addCreator = new javax.swing.JButton();
+        removeCreator = new javax.swing.JButton();
+
+        jButton2.setText("jButton2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edytuj metadane");
         setAlwaysOnTop(true);
 
-        authorLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        authorLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        authorLabel.setText("Autor");
+        creatorLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        creatorLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        creatorLabel.setText("Autor");
 
-        addAuthor.setText("Dodaj");
-        addAuthor.addActionListener(new java.awt.event.ActionListener() {
+        addCreator.setText("Dodaj");
+        addCreator.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addAuthorActionPerformed(evt);
+                addCreatorActionPerformed(evt);
+            }
+        });
+
+        removeCreator.setText("Usuń");
+        removeCreator.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeCreatorActionPerformed(evt);
             }
         });
 
@@ -35,33 +49,46 @@ class EdytujMetadane extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(authorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                .addComponent(creatorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addAuthor)
-                .addGap(220, 220, 220))
+                .addComponent(addCreator)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(removeCreator)
+                .addGap(111, 111, 111))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(authorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addAuthor, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(308, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(addCreator)
+                        .addComponent(removeCreator))
+                    .addComponent(creatorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(310, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAuthorActionPerformed
-        String author = JOptionPane.showInputDialog(this, "Dodaj autora", null);
-        
-    }//GEN-LAST:event_addAuthorActionPerformed
+    private void addCreatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCreatorActionPerformed
+        String creator = JOptionPane.showInputDialog(this, "Dodaj autora", null);
+        eBook.getMetadata().addCreator(creator);
+        eBookWriter.appendNode("metadata", "dc:creator", creator);
+        //eBookWriter.saveMetadata();
+    }//GEN-LAST:event_addCreatorActionPerformed
+
+    private void removeCreatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeCreatorActionPerformed
+        ListItemSelection listItemSelection = new ListItemSelection(eBook, eBook.getMetadata().getCreators());
+        listItemSelection.setVisible(true);
+    }//GEN-LAST:event_removeCreatorActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addAuthor;
-    private javax.swing.JLabel authorLabel;
+    private javax.swing.JButton addCreator;
+    private javax.swing.JLabel creatorLabel;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton removeCreator;
     // End of variables declaration//GEN-END:variables
 }

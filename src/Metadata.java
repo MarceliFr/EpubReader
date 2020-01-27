@@ -1,8 +1,9 @@
-
 import java.util.ArrayList;
 import java.util.List;
+import org.w3c.dom.Node;
 
 class Metadata {
+    private Node metadataNode;
     private List<String> creators = new ArrayList<>();
     private String title;
     private List<String> publishers = new ArrayList<>();
@@ -13,7 +14,13 @@ class Metadata {
     private String language;
     
     public Metadata(){}
-    
+
+    Metadata(Node metadataNode) {
+        this.metadataNode = metadataNode;
+    }
+    public Node getMetadataNode(){
+        return metadataNode;
+    }
     public void setCreators(List<String> creators){
         this.creators = creators;
     }

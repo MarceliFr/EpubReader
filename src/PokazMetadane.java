@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class PokazMetadane extends javax.swing.JFrame {
     private final EBook eBook;
     
@@ -119,9 +123,9 @@ public class PokazMetadane extends javax.swing.JFrame {
         if(eBook.getMetadata().getPublishers()!= null){
             for(int i=0;i<eBook.getMetadata().getPublishers().size();i++){
                 if(i == (eBook.getMetadata().getPublishers().size())-1){
-                    creatorsText.append(eBook.getMetadata().getPublishers().get(i));
+                    publishersText.append(eBook.getMetadata().getPublishers().get(i));
                 }else{
-                    creatorsText.append(eBook.getMetadata().getPublishers().get(i) + "\n");
+                    publishersText.append(eBook.getMetadata().getPublishers().get(i) + "\n");
                 }
             }
         }
@@ -270,9 +274,13 @@ public class PokazMetadane extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void editButtomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtomActionPerformed
-        EdytujMetadane edytujMetadane = new EdytujMetadane(eBook.getMetadata());
-        edytujMetadane.setVisible(true);
-        dispose();
+        try {
+            EdytujMetadane edytujMetadane = new EdytujMetadane(eBook);
+            edytujMetadane.setVisible(true);
+            dispose();
+        } catch (IOException ex) {
+            Logger.getLogger(PokazMetadane.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_editButtomActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
