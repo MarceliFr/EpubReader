@@ -9,7 +9,7 @@ import org.w3c.dom.Document;
 class EdytujMetadane extends javax.swing.JDialog {
     private final EBook eBook;
     private Document tmpContent;
-    private final Metadata tmpMetadata;
+    private Metadata tmpMetadata;
     private final EBookWriter eBookWriter;
     
     public EdytujMetadane(EBook eBook) throws IOException {
@@ -17,7 +17,7 @@ class EdytujMetadane extends javax.swing.JDialog {
         tmpContent = eBook.getContent();
         tmpMetadata = new Metadata();
         tmpMetadata.setCreators(eBook.getMetadata().getCreators());
-        tmpMetadata.setTitle("kurwa");
+        tmpMetadata.setTitle(eBook.getMetadata().getTitle());
         tmpMetadata.setPublishers(eBook.getMetadata().getPublishers());
         tmpMetadata.setDate(eBook.getMetadata().getDate());
         tmpMetadata.setSubjects(eBook.getMetadata().getSubjects());
