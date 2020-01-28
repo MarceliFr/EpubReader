@@ -7,10 +7,10 @@ import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 
 class EdytujMetadane extends javax.swing.JDialog {
-    private final EBook eBook;
+    private EBook eBook;
     private Document tmpContent;
     private Metadata tmpMetadata;
-    private final EBookWriter eBookWriter;
+    private EBookWriter eBookWriter;
     
     public EdytujMetadane(EBook eBook) throws IOException {
         this.eBook = eBook;
@@ -119,8 +119,8 @@ class EdytujMetadane extends javax.swing.JDialog {
         String creator = JOptionPane.showInputDialog(this, "Dodaj autora", null);
         tmpMetadata.addCreator(creator);
         tmpContent = eBookWriter.appendNode(tmpContent, "metadata", "dc:creator", creator);
-        System.out.println(eBook.getMetadata().getCreators().hashCode());
-        System.out.println(tmpMetadata.getCreators().hashCode());
+        System.out.println(eBook.getMetadata().getCreators().toString());
+        System.out.println(tmpMetadata.getCreators().toString());
     }//GEN-LAST:event_addCreatorActionPerformed
 
     private void removeCreatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeCreatorActionPerformed

@@ -1,3 +1,4 @@
+import java.awt.Font;
 import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Level;
@@ -26,11 +27,15 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     private void initComponents() {
 
         jInternalFrame1 = new javax.swing.JInternalFrame();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        eBookText = new javax.swing.JEditorPane();
+        fontChoose = new javax.swing.JComboBox<>();
+        fontSizeSpinner = new javax.swing.JSpinner();
+        fontColor = new javax.swing.JComboBox<>();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        eBookText = new javax.swing.JTextArea();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         plikiTree = new javax.swing.JTree();
@@ -63,29 +68,54 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
+        jMenuItem2.setText("jMenuItem2");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("EpubReader Marceli");
 
         jToolBar1.setRollover(true);
 
-        eBookText.setEditable(false);
-        eBookText.setEditorKit(kit);
-        eBookText.setOpaque(true);
-        jScrollPane5.setViewportView(eBookText);
+        fontChoose.setMaximumSize(new java.awt.Dimension(128, 22));
+        fontChoose.setMinimumSize(new java.awt.Dimension(128, 22));
+        fontChoose.setPreferredSize(new java.awt.Dimension(128, 22));
+        jToolBar1.add(fontChoose);
+
+        fontSizeSpinner.setModel(new javax.swing.SpinnerNumberModel(14, 8, 150, 2));
+        fontSizeSpinner.setToolTipText("Rozmiar czcionki");
+        fontSizeSpinner.setEnabled(false);
+        fontSizeSpinner.setMaximumSize(new java.awt.Dimension(64, 22));
+        fontSizeSpinner.setMinimumSize(new java.awt.Dimension(64, 22));
+        fontSizeSpinner.setPreferredSize(new java.awt.Dimension(64, 22));
+        fontSizeSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                fontSizeSpinnerStateChanged(evt);
+            }
+        });
+        jToolBar1.add(fontSizeSpinner);
+
+        fontColor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        fontColor.setMaximumSize(new java.awt.Dimension(64, 22));
+        jToolBar1.add(fontColor);
+
+        eBookText.setColumns(20);
+        eBookText.setRows(5);
+        eBookText.setLineWrap(true);
+        eBookText.setWrapStyleWord(true);
+        jScrollPane4.setViewportView(eBookText);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
-            .addComponent(jScrollPane5)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+            .addComponent(jScrollPane4)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE))
         );
 
         jSplitPane1.setRightComponent(jPanel1);
@@ -189,11 +219,9 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void plikZamknijActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plikZamknijActionPerformed
         System.exit(0);
     }//GEN-LAST:event_plikZamknijActionPerformed
-
     private void plikZnajdzPublikacjeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plikZnajdzPublikacjeActionPerformed
         jfc.showOpenDialog(null);
         jfc.setName("Znadjowanie E-Booków");
@@ -214,9 +242,9 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         guideList.setModel(lm2);
         guideKeys.forEach((_item) -> {lm2.addElement(_item);
         });
+        fontSizeSpinner.setEnabled(true);
         menuPublikacja.setEnabled(true);
     }//GEN-LAST:event_plikZnajdzPublikacjeActionPerformed
-
     private void publikacjaEdytujMetadaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaEdytujMetadaneActionPerformed
         try {
             EdytujMetadane edytujMetadane = new EdytujMetadane(eBook);
@@ -225,12 +253,10 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_publikacjaEdytujMetadaneActionPerformed
-
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         eBook.close();
         menuPublikacja.setEnabled(false);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-
     private void spineListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_spineListValueChanged
         try {
             String text = eBookReader.readTextFromSpine(((JList)evt.getSource()).getSelectedValue().toString());
@@ -239,7 +265,6 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_spineListValueChanged
-
     private void guideListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_guideListValueChanged
         try {
             String text = eBookReader.readTextFromGuide(((JList)evt.getSource()).getSelectedValue().toString());
@@ -248,11 +273,15 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_guideListValueChanged
-
     private void showMetadaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMetadaneActionPerformed
         PokazMetadane pokazMetadane = new PokazMetadane(eBook);
         pokazMetadane.setVisible(true);
     }//GEN-LAST:event_showMetadaneActionPerformed
+    private void fontSizeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_fontSizeSpinnerStateChanged
+        Font textFont = eBookText.getFont();
+        Font newTextFont = new Font(textFont.getFontName(), textFont.getStyle(), (int) fontSizeSpinner.getValue());
+        eBookText.setFont(newTextFont);
+    }//GEN-LAST:event_fontSizeSpinnerStateChanged
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             new EpubReader_Marceli().setVisible(true);
@@ -260,15 +289,19 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     }
     private final HTMLEditorKit kit = new HTMLEditorKit();
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JEditorPane eBookText;
+    private javax.swing.JTextArea eBookText;
+    private javax.swing.JComboBox<String> fontChoose;
+    private javax.swing.JComboBox<String> fontColor;
+    private javax.swing.JSpinner fontSizeSpinner;
     private javax.swing.JList<String> guideList;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
