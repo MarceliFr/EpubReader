@@ -46,10 +46,11 @@ public class EBookReader {
     }
     private Metadata readMetadata() {
         Metadata metadata = new Metadata(eBook.findNode(eBook.getContent(), "metadata", true));
-                
+        List<String> tmp = new ArrayList<>();
         for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:creator").size();i++){
-            metadata.addCreator((findNodeList(metadata.getMetadataNode(), "dc:creator")).get(i).getTextContent());
+            tmp.add((findNodeList(metadata.getMetadataNode(), "dc:creator")).get(i).getTextContent());
         }
+        metadata.setCreators(tmp);
         metadata.setTitle((eBook.findNode(metadata.getMetadataNode(), "dc:title", true)).getTextContent());
         for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:publisher").size();i++){
             metadata.addPublisher((findNodeList(metadata.getMetadataNode(), "dc:publisher")).get(i).getTextContent());

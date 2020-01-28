@@ -4,7 +4,7 @@ import org.w3c.dom.Node;
 
 class Metadata {
     private Node metadataNode;
-    private List<String> creators = new ArrayList<>();
+    private List<String> creators;
     private String title;
     private List<String> publishers = new ArrayList<>();
     private String date;
@@ -13,8 +13,22 @@ class Metadata {
     private List<String> rights = new ArrayList<>();
     private String language;
     
-    public Metadata(){}
+    public Metadata(){
+        this.creators = new ArrayList<>();
+    }
 
+    public Metadata(Node metadataNode, List<String> creators, String title, List<String> publishers, String date,  List<String> subjects, String source, List<String> rights, String language){
+        this.metadataNode = metadataNode;
+        this.creators = new ArrayList<>(creators);
+        this.title = title;
+        this.publishers = publishers;
+        this.date = date;
+        this.subjects = subjects;
+        this.source = source;
+        this.rights = rights;
+        this.language = language;
+    }
+    
     Metadata(Node metadataNode) {
         this.metadataNode = metadataNode;
     }

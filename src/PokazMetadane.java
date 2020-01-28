@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 public class PokazMetadane extends javax.swing.JFrame {
     private final EBook eBook;
-    
+        
     public PokazMetadane(EBook eBook) {
         this.eBook = eBook;
         initComponents();

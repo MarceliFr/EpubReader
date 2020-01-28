@@ -13,8 +13,6 @@ import java.nio.file.StandardOpenOption;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -28,22 +26,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 class EBookWriter {
-    private final EBook eBook;
+    EBookWriter() {}
     
-    EBookWriter(EBook eBook) {
-        this.eBook = eBook;
-    }
-    
-    public void appendNode(String nodeName, String name, String textContent){
-        Node appendNode = eBook.findNode(eBook.getContent(), nodeName, true);
-        Element newNode = eBook.getContent().createElement(name);
-        newNode.appendChild(eBook.getContent().createTextNode(textContent));
+    public Document appendNode(Document source, String parentNodeName, String newNodeName, String newNodetextContent){
+        Node appendNode = EBook.findNode(source, parentNodeName, true);
+        Element newNode = source.createElement(newNodeName);
+        newNode.appendChild(source.createTextNode(newNodetextContent));
         appendNode.appendChild(newNode);
-        eBook.getContent().normalize();
-        saveMetadata(eBook.getContent());
+        source.normalize();
+        return source;
     }
-    void removeNode(String parentNodeName, String textContent) {
-        Node toRemoveParent = eBook.findNode(eBook.getContent(), parentNodeName, true);
+    public Document removeNode(Document source, String parentNodeName, String textContent) {
+        Node toRemoveParent = EBook.findNode(source, parentNodeName, true);
         if(toRemoveParent.hasChildNodes()){
             for(int i=0;i<toRemoveParent.getChildNodes().getLength();i++){
                 if((toRemoveParent.getChildNodes().item(i).getNodeType() == 1) && (toRemoveParent.getChildNodes().item(i).getTextContent().equals(textContent))){
@@ -52,17 +46,8 @@ class EBookWriter {
                 }
             }
         }
-        eBook.getContent().normalize();
-        saveMetadata(eBook.getContent());
-    }
-    public void saveMetadata(Document source){
-        try {
-            eBook.getZipFile().close();
-            saveContentChanges(eBook.getPath(), eBook.getContentPath(), source);
-            eBook.setZipFile();
-        } catch (IOException | TransformerException ex) {
-            Logger.getLogger(EBookWriter.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        source.normalize();
+        return source;
     }
     public void saveContentChanges(String path, String targetPath, Document content) throws IOException, TransformerException{
         DOMSource source = new DOMSource(content);

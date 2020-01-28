@@ -1,12 +1,13 @@
 import java.util.List;
 import javax.swing.DefaultListModel;
+import org.w3c.dom.Document;
 
 public class ListItemSelection extends javax.swing.JFrame {
-    private final EBook eBook;
+    private Document tmpContent;
     private final List<String> items;
 
-    ListItemSelection(EBook eBook, List<String> items) {
-        this.eBook = eBook;
+    ListItemSelection(Document tmpContent, List<String> items) {
+        this.tmpContent = tmpContent;
         this.items = items;
         initComponents();
         DefaultListModel lm1 = new DefaultListModel();
@@ -71,8 +72,8 @@ public class ListItemSelection extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void removeElementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeElementActionPerformed
-        EBookWriter eBookWriter = new EBookWriter(eBook);
-        eBookWriter.removeNode("metadata", itemList.getSelectedValue());
+        EBookWriter eBookWriter = new EBookWriter();
+        tmpContent = eBookWriter.removeNode(tmpContent, "metadata", itemList.getSelectedValue());
         for(int i=0;i<items.size();i++){
             if(items.get(i).equals(itemList.getSelectedValue())){
                 items.remove(i);

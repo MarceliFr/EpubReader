@@ -1,14 +1,30 @@
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.xml.transform.TransformerException;
+import org.w3c.dom.Document;
 
 class EdytujMetadane extends javax.swing.JDialog {
     private final EBook eBook;
+    private Document tmpContent;
+    private final Metadata tmpMetadata;
     private final EBookWriter eBookWriter;
     
     public EdytujMetadane(EBook eBook) throws IOException {
         this.eBook = eBook;
-        eBookWriter = new EBookWriter(eBook);
+        tmpContent = eBook.getContent();
+        tmpMetadata = new Metadata();
+        tmpMetadata.setCreators(eBook.getMetadata().getCreators());
+        tmpMetadata.setTitle("kurwa");
+        tmpMetadata.setPublishers(eBook.getMetadata().getPublishers());
+        tmpMetadata.setDate(eBook.getMetadata().getDate());
+        tmpMetadata.setSubjects(eBook.getMetadata().getSubjects());
+        tmpMetadata.setSource(eBook.getMetadata().getSource());
+        tmpMetadata.setRights(eBook.getMetadata().getRights());
+        tmpMetadata.setLanguage(eBook.getMetadata().getLanguage());
+        eBookWriter = new EBookWriter();
         initComponents();
     }
     
@@ -20,6 +36,8 @@ class EdytujMetadane extends javax.swing.JDialog {
         creatorLabel = new javax.swing.JLabel();
         addCreator = new javax.swing.JButton();
         removeCreator = new javax.swing.JButton();
+        cancellButton = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
 
         jButton2.setText("jButton2");
 
@@ -45,6 +63,20 @@ class EdytujMetadane extends javax.swing.JDialog {
             }
         });
 
+        cancellButton.setText("Anuluj");
+        cancellButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancellButtonActionPerformed(evt);
+            }
+        });
+
+        saveButton.setText("Zapisz zmiany");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -57,6 +89,12 @@ class EdytujMetadane extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(removeCreator)
                 .addGap(111, 111, 111))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(saveButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cancellButton)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -67,7 +105,11 @@ class EdytujMetadane extends javax.swing.JDialog {
                         .addComponent(addCreator)
                         .addComponent(removeCreator))
                     .addComponent(creatorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(310, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 272, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cancellButton)
+                    .addComponent(saveButton))
+                .addContainerGap())
         );
 
         pack();
@@ -75,20 +117,43 @@ class EdytujMetadane extends javax.swing.JDialog {
 
     private void addCreatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCreatorActionPerformed
         String creator = JOptionPane.showInputDialog(this, "Dodaj autora", null);
-        eBook.getMetadata().addCreator(creator);
-        eBookWriter.appendNode("metadata", "dc:creator", creator);
-        //eBookWriter.saveMetadata();
+        tmpMetadata.addCreator(creator);
+        tmpContent = eBookWriter.appendNode(tmpContent, "metadata", "dc:creator", creator);
+        System.out.println(eBook.getMetadata().getCreators().hashCode());
+        System.out.println(tmpMetadata.getCreators().hashCode());
     }//GEN-LAST:event_addCreatorActionPerformed
 
     private void removeCreatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeCreatorActionPerformed
-        ListItemSelection listItemSelection = new ListItemSelection(eBook, eBook.getMetadata().getCreators());
+        ListItemSelection listItemSelection = new ListItemSelection(tmpContent, tmpMetadata.getCreators());
         listItemSelection.setVisible(true);
     }//GEN-LAST:event_removeCreatorActionPerformed
 
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        try {
+            eBook.setMetadata(tmpMetadata);
+            eBook.getZipFile().close();
+            eBookWriter.saveContentChanges(eBook.getPath(), eBook.getContentPath(), tmpContent);
+            eBook.setZipFile();
+            dispose();
+        } catch (IOException | TransformerException ex) {
+            Logger.getLogger(EdytujMetadane.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void cancellButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancellButtonActionPerformed
+        System.out.println(eBook.getMetadata().hashCode());
+        System.out.println(tmpMetadata.hashCode());
+        System.out.println(eBook.getMetadata().getCreators().toString());
+        System.out.println(tmpMetadata.getCreators().toString());
+        dispose();
+    }//GEN-LAST:event_cancellButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCreator;
+    private javax.swing.JButton cancellButton;
     private javax.swing.JLabel creatorLabel;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton removeCreator;
+    private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 }

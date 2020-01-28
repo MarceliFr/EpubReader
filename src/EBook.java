@@ -70,7 +70,7 @@ class EBook{
     public void close() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    public Node findNode(Node root, String elementName, boolean deep) {
+    public static Node findNode(Node root, String elementName, boolean deep) {
         //Check to see if root has any children if not return null
         if (!(root.hasChildNodes())){
             return null;
