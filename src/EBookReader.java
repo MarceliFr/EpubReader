@@ -45,25 +45,31 @@ public class EBookReader {
     }
     private Metadata readMetadata() {
         Metadata metadata = new Metadata(eBook.findNode(eBook.getContent(), "metadata", true));
-        List<String> tmp = new ArrayList<>();
+        ArrayList<String> creatorstmp = new ArrayList<>();
         for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:creator").size();i++){
-            tmp.add((findNodeList(metadata.getMetadataNode(), "dc:creator")).get(i).getTextContent());
+            creatorstmp.add((findNodeList(metadata.getMetadataNode(), "dc:creator")).get(i).getTextContent());
         }
-        metadata.setCreators(tmp);
-        metadata.setTitle((eBook.findNode(metadata.getMetadataNode(), "dc:title", true)).getTextContent());
+        metadata.setCreators(creatorstmp);
+        metadata.setTitle((EBook.findNode(metadata.getMetadataNode(), "dc:title", true)).getTextContent());
+        ArrayList<String> publisherstmp = new ArrayList<>();
         for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:publisher").size();i++){
-            metadata.addPublisher((findNodeList(metadata.getMetadataNode(), "dc:publisher")).get(i).getTextContent());
+            publisherstmp.add((findNodeList(metadata.getMetadataNode(), "dc:publisher")).get(i).getTextContent());
         }
-        metadata.setDate((eBook.findNode(eBook.getContent(), "dc:date", true)).getTextContent());
+        metadata.setPublishers(publisherstmp);
+        metadata.setDate((EBook.findNode(eBook.getContent(), "dc:date", true)).getTextContent());
+        ArrayList<String> subjectstmp = new ArrayList<>();
         for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:subject").size();i++){
-            metadata.addSubject((findNodeList(metadata.getMetadataNode(), "dc:subject")).get(i).getTextContent());
+            subjectstmp.add((findNodeList(metadata.getMetadataNode(), "dc:subject")).get(i).getTextContent());
         }
-        if(eBook.findNode(eBook.getContent(), "dc:source", true) != null){
+        metadata.setSubjects(subjectstmp);
+        if(EBook.findNode(eBook.getContent(), "dc:source", true) != null){
             metadata.setSource((eBook.findNode(eBook.getContent(), "dc:source", true)).getTextContent());
         }
+        ArrayList<String> rightstmp = new ArrayList<>();
         for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:rights").size();i++){
-            metadata.addRight((findNodeList(metadata.getMetadataNode(), "dc:rights")).get(i).getTextContent());
+            rightstmp.add((findNodeList(metadata.getMetadataNode(), "dc:rights")).get(i).getTextContent());
         }
+        metadata.setRights(rightstmp);
         metadata.setLanguage((eBook.findNode(eBook.getContent(), "dc:language", true)).getTextContent().toUpperCase());
         return metadata;
     }
@@ -87,7 +93,7 @@ public class EBookReader {
         return spineMap;
     }
     private String findHref(String key) {
-        Node manifestNode = eBook.findNode(eBook.getContent(), "manifest", true);
+        Node manifestNode = EBook.findNode(eBook.getContent(), "manifest", true);
         if(manifestNode.hasChildNodes()){
             for(int i=0;i<manifestNode.getChildNodes().getLength();i++){
                 Node manifestElement = manifestNode.getChildNodes().item(i);

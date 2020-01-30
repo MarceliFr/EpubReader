@@ -1,48 +1,43 @@
 import java.util.ArrayList;
-import java.util.List;
 import org.w3c.dom.Node;
 
 class Metadata {
     private Node metadataNode;
-    private List<String> creators;
+    private final ArrayList<String> creators;
     private String title;
-    private List<String> publishers = new ArrayList<>();
+    private final ArrayList<String> publishers;
     private String date;
-    private List<String> subjects = new ArrayList<>();
+    private final ArrayList<String> subjects;
     private String source;
-    private List<String> rights = new ArrayList<>();
+    private final ArrayList<String> rights;
     private String language;
     
     public Metadata(){
         this.creators = new ArrayList<>();
+        this.publishers = new ArrayList<>();
+        this.subjects = new ArrayList<>();
+        this.rights = new ArrayList<>();
     }
-
-    public Metadata(Node metadataNode, List<String> creators, String title, List<String> publishers, String date,  List<String> subjects, String source, List<String> rights, String language){
+    public Metadata(Node metadataNode) {
         this.metadataNode = metadataNode;
-        this.creators = new ArrayList<>(creators);
-        this.title = title;
-        this.publishers = publishers;
-        this.date = date;
-        this.subjects = subjects;
-        this.source = source;
-        this.rights = rights;
-        this.language = language;
-    }
-    
-    Metadata(Node metadataNode) {
-        this.metadataNode = metadataNode;
+        this.creators = new ArrayList<>();
+        this.publishers = new ArrayList<>();
+        this.subjects = new ArrayList<>();
+        this.rights = new ArrayList<>();
     }
     public Node getMetadataNode(){
         return metadataNode;
     }
-    public void setCreators(List<String> creators){
-        this.creators = creators;
+    public void setCreators(ArrayList<String> creators){
+        for(int i=0;i<creators.size();i++){
+            this.creators.add(creators.get(i));
+        }
     }
     public void addCreator(String creator){
-        creators.add(creator);
+        this.creators.add(creator);
     }
-    public List<String> getCreators(){
-        return creators;
+    public ArrayList<String> getCreators(){
+        return this.creators;
     }
     public void setTitle(String title){
         this.title = title;
@@ -50,13 +45,15 @@ class Metadata {
     public String getTitle(){
         return title;
     }
-    public void setPublishers(List<String> publishers){
-        this.publishers = publishers;
+    public void setPublishers(ArrayList<String> publishers){
+        for(int i=0;i<publishers.size();i++){
+            this.publishers.add(publishers.get(i));
+        }
     }
     public void addPublisher(String publisher){
-        publishers.add(publisher);
+        this.publishers.add(publisher);
     }
-    public List<String> getPublishers(){
+    public ArrayList<String> getPublishers(){
         return publishers;
     }
     public void setDate(String date){
@@ -65,13 +62,15 @@ class Metadata {
     public String getDate(){
         return date;
     }
-    public void setSubjects(List<String> subjects){
-        this.subjects = subjects;
+    public void setSubjects(ArrayList<String> subjects){
+        for(int i=0;i<subjects.size();i++){
+            this.subjects.add(subjects.get(i));
+        }
     }
     public void addSubject(String subject){
-        subjects.add(subject);
+        this.subjects.add(subject);
     }
-    public List<String> getSubjects(){
+    public ArrayList<String> getSubjects(){
         return subjects;
     }
     public void setSource(String source){
@@ -80,13 +79,15 @@ class Metadata {
     public String getSource(){
         return source;
     }
-    public void setRights(List<String> rights){
-        this.rights = rights;
+    public void setRights(ArrayList<String> rights){
+        for(int i=0;i<rights.size();i++){
+            this.rights.add(rights.get(i));
+        }
     }
     public void addRight(String right){
-        rights.add(right);
+        this.rights.add(right);
     }
-    public List<String> getRights(){
+    public ArrayList<String> getRights(){
         return rights;
     }
     public void setLanguage(String language){

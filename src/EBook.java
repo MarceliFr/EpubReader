@@ -45,7 +45,7 @@ class EBook{
         this.metadata = metadata;
     }
     public Metadata getMetadata(){
-        return metadata;
+        return this.metadata;
     }
     public void setSpineMap(Map<String, String> spineMap) {
         this.spineMap = spineMap;
@@ -67,8 +67,8 @@ class EBook{
         Set<String> guideKeys = guideMap.keySet();
         return guideKeys;
     }
-    public void close() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void close() throws IOException {
+        zFile.close();
     }
     public static Node findNode(Node root, String elementName, boolean deep) {
         //Check to see if root has any children if not return null

@@ -36,7 +36,7 @@ public class PokazMetadane extends javax.swing.JFrame {
         sourceText = new javax.swing.JTextField();
         editButtom = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Pokaż metadane");
 
         title.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
