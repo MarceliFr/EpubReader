@@ -56,7 +56,15 @@ public class EBookReader {
             publisherstmp.add((findNodeList(metadata.getMetadataNode(), "dc:publisher")).get(i).getTextContent());
         }
         metadata.setPublishers(publisherstmp);
-        metadata.setDate((EBook.findNode(eBook.getContent(), "dc:date", true)).getTextContent());
+        ArrayList<String> datestmp = new ArrayList<>();
+        String datetmp;
+        for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:date").size();i++){
+            datetmp = (findNodeList(metadata.getMetadataNode(), "dc:date")).get(i).getAttributes().item(0).getTextContent();
+            datetmp += ": ";
+            datetmp += (findNodeList(metadata.getMetadataNode(), "dc:date")).get(i).getTextContent();
+            datestmp.add(datetmp);
+        }
+        metadata.setDates(datestmp);
         ArrayList<String> subjectstmp = new ArrayList<>();
         for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:subject").size();i++){
             subjectstmp.add((findNodeList(metadata.getMetadataNode(), "dc:subject")).get(i).getTextContent());

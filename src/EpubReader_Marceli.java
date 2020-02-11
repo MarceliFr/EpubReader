@@ -7,8 +7,6 @@ import java.util.logging.Logger;
 
 import javax.swing.DefaultListModel;
 
-import javax.swing.JFileChooser;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
@@ -237,7 +235,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_plikZamknijActionPerformed
     private void plikZnajdzPublikacjeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plikZnajdzPublikacjeActionPerformed
-        jfc = new JFileChooser();
+        jfc = new javax.swing.JFileChooser();
         jfc.showOpenDialog(null);
         jfc.setName("Znadjowanie E-Booków");
         path = jfc.getSelectedFile().getAbsolutePath();
@@ -282,9 +280,9 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
     private void spineListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_spineListValueChanged
         try {
-            if(((JList)evt.getSource()).getSelectedValue() != null){
+            if(((javax.swing.JList)evt.getSource()).getSelectedValue() != null){
                 System.out.println();
-                String text = eBookReader.readTextFromSpine(((JList)evt.getSource()).getSelectedValue().toString());
+                String text = eBookReader.readTextFromSpine(((javax.swing.JList)evt.getSource()).getSelectedValue().toString());
                 eBookText.setText(text);
             }
         } catch (IOException ex) {
@@ -295,8 +293,8 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     }//GEN-LAST:event_spineListValueChanged
     private void guideListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_guideListValueChanged
         try {
-            if(((JList)evt.getSource()).getSelectedValue() != null){
-                String text = eBookReader.readTextFromGuide(((JList)evt.getSource()).getSelectedValue().toString());
+            if(((javax.swing.JList)evt.getSource()).getSelectedValue() != null){
+                String text = eBookReader.readTextFromGuide(((javax.swing.JList)evt.getSource()).getSelectedValue().toString());
                 eBookText.setText(text);
             }
         } catch (IOException ex) {
@@ -355,7 +353,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     private javax.swing.JMenuItem showMetadane;
     private javax.swing.JList<String> spineList;
     // End of variables declaration//GEN-END:variables
+    private javax.swing.JFileChooser jfc;
     private DefaultListModel spineListModel;
     private DefaultListModel guideListModel;
-    private JFileChooser jfc;
 }

@@ -29,6 +29,7 @@ public class ListItemSelection extends javax.swing.JFrame {
         setTitle("Wybierz element");
         setAlwaysOnTop(true);
         setResizable(false);
+        setSize(new java.awt.Dimension(321, 153));
 
         itemList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };

@@ -18,7 +18,7 @@ class EdytujMetadane extends javax.swing.JDialog {
         tmpMetadata.setCreators(eBook.getMetadata().getCreators());
         tmpMetadata.setTitle(eBook.getMetadata().getTitle());
         tmpMetadata.setPublishers(eBook.getMetadata().getPublishers());
-        tmpMetadata.setDate(eBook.getMetadata().getDate());
+        tmpMetadata.setDates(eBook.getMetadata().getDates());
         tmpMetadata.setSubjects(eBook.getMetadata().getSubjects());
         tmpMetadata.setSource(eBook.getMetadata().getSource());
         tmpMetadata.setRights(eBook.getMetadata().getRights());
@@ -42,12 +42,17 @@ class EdytujMetadane extends javax.swing.JDialog {
         publisherLabel = new javax.swing.JLabel();
         addPublisher = new javax.swing.JButton();
         removePublisher = new javax.swing.JButton();
+        removeDate = new javax.swing.JButton();
+        dateLabel = new javax.swing.JLabel();
+        addDate = new javax.swing.JButton();
 
         jButton2.setText("jButton2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edytuj metadane");
         setAlwaysOnTop(true);
+        setResizable(false);
+        setSize(new java.awt.Dimension(400, 348));
 
         creatorLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         creatorLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -106,6 +111,24 @@ class EdytujMetadane extends javax.swing.JDialog {
             }
         });
 
+        removeDate.setText("Usuń");
+        removeDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeDateActionPerformed(evt);
+            }
+        });
+
+        dateLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        dateLabel.setText("Daty");
+
+        addDate.setText("Dodaj");
+        addDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addDateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -138,7 +161,14 @@ class EdytujMetadane extends javax.swing.JDialog {
                         .addComponent(addPublisher)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removePublisher)
-                        .addGap(150, 150, 150)))
+                        .addGap(150, 150, 150))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addDate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removeDate)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -158,7 +188,12 @@ class EdytujMetadane extends javax.swing.JDialog {
                     .addComponent(addPublisher)
                     .addComponent(removePublisher)
                     .addComponent(publisherLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 205, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addDate)
+                    .addComponent(removeDate)
+                    .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancellButton)
                     .addComponent(saveButton))
@@ -205,15 +240,26 @@ class EdytujMetadane extends javax.swing.JDialog {
         ListItemSelection listItemSelection = new ListItemSelection(tmpContent, tmpMetadata.getPublishers());
         listItemSelection.setVisible(true);
     }//GEN-LAST:event_removePublisherActionPerformed
+    private void removeDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDateActionPerformed
+        ListItemSelection listItemSelection = new ListItemSelection(tmpContent, tmpMetadata.getDates());
+        listItemSelection.setVisible(true);
+    }//GEN-LAST:event_removeDateActionPerformed
+    private void addDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDateActionPerformed
+        DateInput di = new DateInput(tmpContent, tmpMetadata);
+        di.setVisible(true);
+    }//GEN-LAST:event_addDateActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCreator;
+    private javax.swing.JButton addDate;
     private javax.swing.JButton addPublisher;
     private javax.swing.JButton cancellButton;
     private javax.swing.JLabel creatorLabel;
+    private javax.swing.JLabel dateLabel;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel publisherLabel;
     private javax.swing.JButton removeCreator;
+    private javax.swing.JButton removeDate;
     private javax.swing.JButton removePublisher;
     private javax.swing.JButton saveButton;
     private javax.swing.JLabel titleLabel;

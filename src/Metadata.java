@@ -6,7 +6,7 @@ class Metadata {
     private final ArrayList<String> creators;
     private String title;
     private final ArrayList<String> publishers;
-    private String date;
+    private final ArrayList<String> dates;
     private final ArrayList<String> subjects;
     private String source;
     private final ArrayList<String> rights;
@@ -14,6 +14,7 @@ class Metadata {
     
     public Metadata(){
         this.creators = new ArrayList<>();
+        this.dates = new ArrayList<>();
         this.publishers = new ArrayList<>();
         this.subjects = new ArrayList<>();
         this.rights = new ArrayList<>();
@@ -21,6 +22,7 @@ class Metadata {
     public Metadata(Node metadataNode) {
         this.metadataNode = metadataNode;
         this.creators = new ArrayList<>();
+        this.dates = new ArrayList<>();
         this.publishers = new ArrayList<>();
         this.subjects = new ArrayList<>();
         this.rights = new ArrayList<>();
@@ -56,11 +58,16 @@ class Metadata {
     public ArrayList<String> getPublishers(){
         return publishers;
     }
-    public void setDate(String date){
-        this.date = date;
+    public void setDates(ArrayList<String> dates){
+        for(int i=0;i<dates.size();i++){
+            this.dates.add(dates.get(i));
+        }
     }
-    public String getDate(){
-        return date;
+    public void addDate(String date){
+        this.dates.add(date);
+    }
+    public ArrayList<String> getDates(){
+        return dates;
     }
     public void setSubjects(ArrayList<String> subjects){
         for(int i=0;i<subjects.size();i++){
