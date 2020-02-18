@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import org.w3c.dom.Node;
 
-class Metadata {
+class Metadata implements Cloneable {
     private Node metadataNode;
     private final ArrayList<String> creators;
     private String title;
@@ -26,6 +26,10 @@ class Metadata {
         this.publishers = new ArrayList<>();
         this.subjects = new ArrayList<>();
         this.rights = new ArrayList<>();
+    }
+    @Override
+    protected Object clone()throws CloneNotSupportedException{  
+        return super.clone();  
     }
     public Node getMetadataNode(){
         return metadataNode;

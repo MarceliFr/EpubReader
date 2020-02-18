@@ -14,37 +14,37 @@ public class PokazMetadane extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        title = new javax.swing.JLabel();
+        titleLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         creatorsText = new javax.swing.JTextArea();
-        creators = new javax.swing.JLabel();
+        creatorsLabel = new javax.swing.JLabel();
         titleText = new javax.swing.JTextField();
-        publishers = new javax.swing.JLabel();
+        publishersLabel = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         subjectsText = new javax.swing.JTextArea();
-        subjects = new javax.swing.JLabel();
+        subjectsLabel = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         publishersText = new javax.swing.JTextArea();
         jScrollPane6 = new javax.swing.JScrollPane();
         rightsText = new javax.swing.JTextArea();
-        rights = new javax.swing.JLabel();
+        rightsLabel = new javax.swing.JLabel();
         languageText = new javax.swing.JTextField();
-        source = new javax.swing.JLabel();
-        language = new javax.swing.JLabel();
+        sourceLabel = new javax.swing.JLabel();
+        languageLabel = new javax.swing.JLabel();
         sourceText = new javax.swing.JTextField();
         editButtom = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
         datesText = new javax.swing.JTextArea();
-        dates = new javax.swing.JLabel();
+        datesLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Pokaż metadane");
         setResizable(false);
         setSize(new java.awt.Dimension(463, 486));
 
-        title.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        title.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        title.setText("Tytuł");
+        titleLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        titleLabel.setText("Tytuł");
 
         creatorsText.setEditable(false);
         creatorsText.setBackground(new java.awt.Color(240, 240, 240));
@@ -65,9 +65,9 @@ public class PokazMetadane extends javax.swing.JDialog {
         }
         jScrollPane2.setViewportView(creatorsText);
 
-        creators.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        creators.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        creators.setText("Autorzy");
+        creatorsLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        creatorsLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        creatorsLabel.setText("Autorzy");
 
         titleText.setEditable(false);
         titleText.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -76,9 +76,9 @@ public class PokazMetadane extends javax.swing.JDialog {
         titleText.setMaximumSize(new java.awt.Dimension(6, 26));
         titleText.setText(eBook.getMetadata().getTitle());
 
-        publishers.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        publishers.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        publishers.setText("Wydawcy");
+        publishersLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        publishersLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        publishersLabel.setText("Wydawcy");
 
         subjectsText.setEditable(false);
         subjectsText.setBackground(new java.awt.Color(240, 240, 240));
@@ -98,11 +98,11 @@ public class PokazMetadane extends javax.swing.JDialog {
         }
         jScrollPane4.setViewportView(subjectsText);
 
-        subjects.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        subjects.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        subjects.setText("Tematy");
-        subjects.setMaximumSize(new java.awt.Dimension(66, 20));
-        subjects.setMinimumSize(new java.awt.Dimension(66, 20));
+        subjectsLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        subjectsLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        subjectsLabel.setText("Tematy");
+        subjectsLabel.setMaximumSize(new java.awt.Dimension(66, 20));
+        subjectsLabel.setMinimumSize(new java.awt.Dimension(66, 20));
 
         publishersText.setEditable(false);
         publishersText.setBackground(new java.awt.Color(240, 240, 240));
@@ -141,11 +141,11 @@ public class PokazMetadane extends javax.swing.JDialog {
         }
         jScrollPane6.setViewportView(rightsText);
 
-        rights.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        rights.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        rights.setText("Prawa");
-        rights.setMaximumSize(new java.awt.Dimension(66, 20));
-        rights.setMinimumSize(new java.awt.Dimension(66, 20));
+        rightsLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        rightsLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        rightsLabel.setText("Prawa");
+        rightsLabel.setMaximumSize(new java.awt.Dimension(66, 20));
+        rightsLabel.setMinimumSize(new java.awt.Dimension(66, 20));
 
         languageText.setEditable(false);
         languageText.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -154,13 +154,13 @@ public class PokazMetadane extends javax.swing.JDialog {
         languageText.setMaximumSize(new java.awt.Dimension(6, 26));
         languageText.setText(eBook.getMetadata().getLanguage());
 
-        source.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        source.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        source.setText("Żródło");
+        sourceLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        sourceLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        sourceLabel.setText("Żródło");
 
-        language.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        language.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        language.setText("Język");
+        languageLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        languageLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        languageLabel.setText("Język");
 
         sourceText.setEditable(false);
         sourceText.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -196,9 +196,9 @@ public class PokazMetadane extends javax.swing.JDialog {
         }
         jScrollPane7.setViewportView(datesText);
 
-        dates.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        dates.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        dates.setText("Daty");
+        datesLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        datesLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        datesLabel.setText("Daty");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -208,26 +208,26 @@ public class PokazMetadane extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(subjects, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(subjectsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane4))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(creators, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(creatorsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(titleText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(publishers, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(publishersLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane5))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(language, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(rights, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(source, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(languageLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(rightsLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(sourceLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -237,7 +237,7 @@ public class PokazMetadane extends javax.swing.JDialog {
                             .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(sourceText, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(dates, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(datesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane7)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -248,34 +248,34 @@ public class PokazMetadane extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2)
-                    .addComponent(creators, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(creatorsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(title)
+                    .addComponent(titleLabel)
                     .addComponent(titleText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(publishers, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(publishersLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dates, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(datesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane4)
-                    .addComponent(subjects, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(subjectsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(source, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sourceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(sourceText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rights, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rightsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(language)
+                    .addComponent(languageLabel)
                     .addComponent(editButtom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(languageText, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -289,15 +289,14 @@ public class PokazMetadane extends javax.swing.JDialog {
             EdytujMetadane edytujMetadane = new EdytujMetadane(eBook);
             edytujMetadane.setVisible(true);
             dispose();
-        } catch (IOException ex) {
+        } catch (IOException | CloneNotSupportedException ex) {
             Logger.getLogger(PokazMetadane.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_editButtomActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel creators;
+    private javax.swing.JLabel creatorsLabel;
     private javax.swing.JTextArea creatorsText;
-    private javax.swing.JLabel dates;
+    private javax.swing.JLabel datesLabel;
     private javax.swing.JTextArea datesText;
     private javax.swing.JButton editButtom;
     private javax.swing.JScrollPane jScrollPane2;
@@ -305,17 +304,17 @@ public class PokazMetadane extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JLabel language;
+    private javax.swing.JLabel languageLabel;
     private javax.swing.JTextField languageText;
-    private javax.swing.JLabel publishers;
+    private javax.swing.JLabel publishersLabel;
     private javax.swing.JTextArea publishersText;
-    private javax.swing.JLabel rights;
+    private javax.swing.JLabel rightsLabel;
     private javax.swing.JTextArea rightsText;
-    private javax.swing.JLabel source;
+    private javax.swing.JLabel sourceLabel;
     private javax.swing.JTextField sourceText;
-    private javax.swing.JLabel subjects;
+    private javax.swing.JLabel subjectsLabel;
     private javax.swing.JTextArea subjectsText;
-    private javax.swing.JLabel title;
+    private javax.swing.JLabel titleLabel;
     private javax.swing.JTextField titleText;
     // End of variables declaration//GEN-END:variables
 }

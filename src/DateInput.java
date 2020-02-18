@@ -10,11 +10,13 @@ public class DateInput extends javax.swing.JFrame {
     private final Document tmpContent;
     private final Metadata tmpMetadata;
     private final DateFormat df;
+    EBookWriter eBookWriter;
     
     DateInput(Document tmpContent, Metadata tmpMetadata) {
         this.tmpContent = tmpContent;
         this.tmpMetadata = tmpMetadata;
-        df = new SimpleDateFormat("dd/MM/yyyy");
+        df = new SimpleDateFormat("dd-MM-yyyy");
+        eBookWriter = new EBookWriter(tmpContent);
         initComponents();
     }
     
@@ -106,12 +108,11 @@ public class DateInput extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void dateTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTextKeyTyped
         char c = evt.getKeyChar();
         if (!((c >= '0') && (c <= '9') ||
             (c == KeyEvent.VK_BACK_SPACE) ||
-            (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_SLASH))){
+            (c == KeyEvent.VK_DELETE) || (c == '-'))){
         //JOptionPane.showMessageDialog(null, "Wprowadź poprawną datę");
             evt.consume();
         }
@@ -125,16 +126,14 @@ public class DateInput extends javax.swing.JFrame {
         }else{
             try {
                 Date date = df.parse(dateText.getText());
-                String addDateSt = datePropertyText.getText() + ": " + df.format(date);
-                System.out.println(addDateSt);
-                tmpMetadata.addDate(addDateSt);
+                tmpMetadata.addDate(datePropertyText.getText() + ": " + df.format(date));
+                eBookWriter.appendNode("metadata", "dc:date", "opf:event", datePropertyText.getText(), df.format(date));
                 dispose();
             } catch (ParseException e) {
                 JOptionPane.showMessageDialog(this, "nieprawidłowy format daty");
             }
         }
     }//GEN-LAST:event_saveButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancellButton;
     private javax.swing.JLabel dateLabel;

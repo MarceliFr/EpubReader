@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -7,23 +10,17 @@ import org.w3c.dom.Document;
 
 class EdytujMetadane extends javax.swing.JDialog {
     private final EBook eBook;
-    private Document tmpContent;
+    private final Document tmpContent;
     private final Metadata tmpMetadata;
     private final EBookWriter eBookWriter;
+    private final List<String> datesOnly;
     
-    public EdytujMetadane(EBook eBook) throws IOException {
+    public EdytujMetadane(EBook eBook) throws IOException, CloneNotSupportedException {
         this.eBook = eBook;
         tmpContent = eBook.getContent();
-        tmpMetadata = new Metadata();
-        tmpMetadata.setCreators(eBook.getMetadata().getCreators());
-        tmpMetadata.setTitle(eBook.getMetadata().getTitle());
-        tmpMetadata.setPublishers(eBook.getMetadata().getPublishers());
-        tmpMetadata.setDates(eBook.getMetadata().getDates());
-        tmpMetadata.setSubjects(eBook.getMetadata().getSubjects());
-        tmpMetadata.setSource(eBook.getMetadata().getSource());
-        tmpMetadata.setRights(eBook.getMetadata().getRights());
-        tmpMetadata.setLanguage(eBook.getMetadata().getLanguage());
-        eBookWriter = new EBookWriter();
+        tmpMetadata = (Metadata)eBook.getMetadata().clone();
+        eBookWriter = new EBookWriter(tmpContent);
+        datesOnly = new ArrayList<>();
         initComponents();
     }
     
@@ -33,18 +30,28 @@ class EdytujMetadane extends javax.swing.JDialog {
 
         jButton2 = new javax.swing.JButton();
         creatorLabel = new javax.swing.JLabel();
-        addCreator = new javax.swing.JButton();
-        removeCreator = new javax.swing.JButton();
+        addCreatorButton = new javax.swing.JButton();
+        removeCreatorButton = new javax.swing.JButton();
         cancellButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         titleLabel = new javax.swing.JLabel();
         titleText = new javax.swing.JTextField();
         publisherLabel = new javax.swing.JLabel();
-        addPublisher = new javax.swing.JButton();
-        removePublisher = new javax.swing.JButton();
-        removeDate = new javax.swing.JButton();
+        addPublisherButton = new javax.swing.JButton();
+        removePublisherButton = new javax.swing.JButton();
+        removeDateButton = new javax.swing.JButton();
         dateLabel = new javax.swing.JLabel();
-        addDate = new javax.swing.JButton();
+        addDateButton = new javax.swing.JButton();
+        removeSubjectButton = new javax.swing.JButton();
+        subjectsLabel = new javax.swing.JLabel();
+        addSubjectButton = new javax.swing.JButton();
+        sourceLabel = new javax.swing.JLabel();
+        sourceText = new javax.swing.JTextField();
+        removeRightButton = new javax.swing.JButton();
+        rightsLabel = new javax.swing.JLabel();
+        addRightButton = new javax.swing.JButton();
+        languageLabel = new javax.swing.JLabel();
+        languageComboBox = new javax.swing.JComboBox<>();
 
         jButton2.setText("jButton2");
 
@@ -56,19 +63,21 @@ class EdytujMetadane extends javax.swing.JDialog {
 
         creatorLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         creatorLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        creatorLabel.setText("Autor");
+        creatorLabel.setText("Autorzy");
 
-        addCreator.setText("Dodaj");
-        addCreator.addActionListener(new java.awt.event.ActionListener() {
+        addCreatorButton.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        addCreatorButton.setText("Dodaj");
+        addCreatorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addCreatorActionPerformed(evt);
+                addCreatorButtonActionPerformed(evt);
             }
         });
 
-        removeCreator.setText("Usuń");
-        removeCreator.addActionListener(new java.awt.event.ActionListener() {
+        removeCreatorButton.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        removeCreatorButton.setText("Usuń");
+        removeCreatorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeCreatorActionPerformed(evt);
+                removeCreatorButtonActionPerformed(evt);
             }
         });
 
@@ -97,24 +106,27 @@ class EdytujMetadane extends javax.swing.JDialog {
         publisherLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         publisherLabel.setText("Wydawcy");
 
-        addPublisher.setText("Dodaj");
-        addPublisher.addActionListener(new java.awt.event.ActionListener() {
+        addPublisherButton.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        addPublisherButton.setText("Dodaj");
+        addPublisherButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addPublisherActionPerformed(evt);
+                addPublisherButtonActionPerformed(evt);
             }
         });
 
-        removePublisher.setText("Usuń");
-        removePublisher.addActionListener(new java.awt.event.ActionListener() {
+        removePublisherButton.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        removePublisherButton.setText("Usuń");
+        removePublisherButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removePublisherActionPerformed(evt);
+                removePublisherButtonActionPerformed(evt);
             }
         });
 
-        removeDate.setText("Usuń");
-        removeDate.addActionListener(new java.awt.event.ActionListener() {
+        removeDateButton.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        removeDateButton.setText("Usuń");
+        removeDateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeDateActionPerformed(evt);
+                removeDateButtonActionPerformed(evt);
             }
         });
 
@@ -122,12 +134,72 @@ class EdytujMetadane extends javax.swing.JDialog {
         dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         dateLabel.setText("Daty");
 
-        addDate.setText("Dodaj");
-        addDate.addActionListener(new java.awt.event.ActionListener() {
+        addDateButton.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        addDateButton.setText("Dodaj");
+        addDateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addDateActionPerformed(evt);
+                addDateButtonActionPerformed(evt);
             }
         });
+
+        removeSubjectButton.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        removeSubjectButton.setText("Usuń");
+        removeSubjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeSubjectButtonActionPerformed(evt);
+            }
+        });
+
+        subjectsLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        subjectsLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        subjectsLabel.setText("Tematyka");
+
+        addSubjectButton.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        addSubjectButton.setText("Dodaj");
+        addSubjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSubjectButtonActionPerformed(evt);
+            }
+        });
+
+        sourceLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        sourceLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        sourceLabel.setText("Żródło");
+
+        sourceText.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        sourceText.setText(eBook.getMetadata().getSource());
+
+        removeRightButton.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        removeRightButton.setText("Usuń");
+        removeRightButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeRightButtonActionPerformed(evt);
+            }
+        });
+
+        rightsLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        rightsLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        rightsLabel.setText("Uprawnienia");
+
+        addRightButton.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        addRightButton.setText("Dodaj");
+        addRightButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addRightButtonActionPerformed(evt);
+            }
+        });
+
+        languageLabel.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        languageLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        languageLabel.setText("Język");
+
+        languageComboBox.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        for(String lang : Locale.getISOLanguages()) {
+            languageComboBox.addItem(lang.toUpperCase());
+            if (lang.toUpperCase().equals(tmpMetadata.getLanguage())){
+                languageComboBox.setSelectedItem(tmpMetadata.getLanguage());
+            }
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -137,92 +209,160 @@ class EdytujMetadane extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(creatorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
+                        .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(saveButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cancellButton))
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(titleText, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(publisherLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addPublisherButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(removePublisherButton))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(subjectsLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(creatorLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(dateLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(addCreator)
+                                        .addComponent(addDateButton)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(removeCreator))
-                                    .addComponent(titleText, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(publisherLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addPublisher)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removePublisher)
-                        .addGap(150, 150, 150))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addDate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeDate)
+                                        .addComponent(removeDateButton))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(addCreatorButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(removeCreatorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(addSubjectButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(removeSubjectButton))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(languageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(rightsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(sourceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(languageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(addRightButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(removeRightButton))
+                                    .addComponent(sourceText, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addCreator)
-                    .addComponent(removeCreator)
-                    .addComponent(creatorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(creatorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(addCreatorButton)
+                        .addComponent(removeCreatorButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(titleText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addPublisher)
-                    .addComponent(removePublisher)
-                    .addComponent(publisherLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(addPublisherButton)
+                    .addComponent(publisherLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(removePublisherButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addDate)
-                    .addComponent(removeDate)
-                    .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
+                    .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addDateButton)
+                    .addComponent(removeDateButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancellButton)
-                    .addComponent(saveButton))
-                .addGap(18, 18, 18))
+                    .addComponent(subjectsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addSubjectButton)
+                    .addComponent(removeSubjectButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sourceText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sourceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rightsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addRightButton)
+                    .addComponent(removeRightButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(languageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(languageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(saveButton)
+                    .addComponent(cancellButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void addCreatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCreatorActionPerformed
+    private void addCreatorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCreatorButtonActionPerformed
         String creator = JOptionPane.showInputDialog(this, "Dodaj autora", null);
         tmpMetadata.addCreator(creator);
-        tmpContent = eBookWriter.appendNode(tmpContent, "metadata", "dc:creator", creator);
-    }//GEN-LAST:event_addCreatorActionPerformed
-    private void removeCreatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeCreatorActionPerformed
-        ListItemSelection listItemSelection = new ListItemSelection(tmpContent, tmpMetadata.getCreators());
-        listItemSelection.setVisible(true);
-    }//GEN-LAST:event_removeCreatorActionPerformed
+        eBookWriter.appendNode("metadata", "dc:creator", "", "", creator);
+    }//GEN-LAST:event_addCreatorButtonActionPerformed
+    private void removeCreatorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeCreatorButtonActionPerformed
+        if(tmpMetadata.getCreators().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Brak elemantów do usunięcia!");
+        }else{
+            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, tmpMetadata.getCreators());
+            listItemSelection.setVisible(true);
+        }
+    }//GEN-LAST:event_removeCreatorButtonActionPerformed
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         try {
             if(!titleText.getText().equals(eBook.getMetadata().getTitle())){
                 tmpMetadata.setTitle(titleText.getText());
+                eBookWriter.updateNode("metadata", "dc:title", titleText.getText());
+            }
+            if(!sourceText.getText().equals(eBook.getMetadata().getSource())){
+                tmpMetadata.setSource(sourceText.getText());
+                eBookWriter.updateNode("metadata", "dc:source", sourceText.getText());
+            }
+            if(!(languageComboBox.getSelectedItem().toString().equals(tmpMetadata.getLanguage()))){
+                tmpMetadata.setLanguage(languageComboBox.getSelectedItem().toString());
+                eBookWriter.updateNode("metadata", "dc:language", languageComboBox.getSelectedItem().toString().toLowerCase());
             }
             eBook.setMetadata(tmpMetadata);
             eBook.getZipFile().close();
             eBookWriter.saveContentChanges(eBook.getPath(), eBook.getContentPath(), tmpContent);
             eBook.setZipFile();
+            if(!(datesOnly.isEmpty()) && datesOnly.size() < tmpMetadata.getDates().size()){
+                boolean toRemove = true;
+                for(int i=0;i<tmpMetadata.getDates().size(); i++){
+                    for(int j=0;j<datesOnly.size();j++){
+                        if(tmpMetadata.getDates().get(i).contains(datesOnly.get(j))){
+                            toRemove = false;
+                            break;
+                        }else{
+                            toRemove = true;
+                        }
+                    }
+                    if(toRemove == true){
+                        tmpMetadata.getDates().remove(i);
+                    }
+                    toRemove = true;
+                }
+            }
             dispose();
         } catch (IOException | TransformerException ex) {
             Logger.getLogger(EdytujMetadane.class.getName()).log(Level.SEVERE, null, ex);
@@ -231,37 +371,86 @@ class EdytujMetadane extends javax.swing.JDialog {
     private void cancellButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancellButtonActionPerformed
         dispose();
     }//GEN-LAST:event_cancellButtonActionPerformed
-    private void addPublisherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPublisherActionPerformed
+    private void addPublisherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPublisherButtonActionPerformed
         String publisher = JOptionPane.showInputDialog(this, "Dodaj wydawcę", null);
         tmpMetadata.addPublisher(publisher);
-        tmpContent = eBookWriter.appendNode(tmpContent, "metadata", "dc:publisher", publisher);
-    }//GEN-LAST:event_addPublisherActionPerformed
-    private void removePublisherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePublisherActionPerformed
-        ListItemSelection listItemSelection = new ListItemSelection(tmpContent, tmpMetadata.getPublishers());
-        listItemSelection.setVisible(true);
-    }//GEN-LAST:event_removePublisherActionPerformed
-    private void removeDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDateActionPerformed
-        ListItemSelection listItemSelection = new ListItemSelection(tmpContent, tmpMetadata.getDates());
-        listItemSelection.setVisible(true);
-    }//GEN-LAST:event_removeDateActionPerformed
-    private void addDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDateActionPerformed
+        eBookWriter.appendNode("metadata", "dc:publisher", "", "", publisher);
+    }//GEN-LAST:event_addPublisherButtonActionPerformed
+    private void removePublisherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePublisherButtonActionPerformed
+        if(tmpMetadata.getPublishers().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Brak elemantów do usunięcia!");
+        }else{
+            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, tmpMetadata.getPublishers());
+            listItemSelection.setVisible(true);
+        }
+    }//GEN-LAST:event_removePublisherButtonActionPerformed
+    private void removeDateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDateButtonActionPerformed
+        if(tmpMetadata.getDates().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Brak elemantów do usunięcia!");
+        }else{
+            datesOnly.removeAll(datesOnly);
+            for(int i=0;i<tmpMetadata.getDates().size();i++){
+                String dateOnly = tmpMetadata.getDates().get(i);
+                dateOnly = dateOnly.substring(dateOnly.indexOf(':') + 2);
+                datesOnly.add(dateOnly);
+            }
+            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, datesOnly);
+            listItemSelection.setVisible(true);
+        }
+    }//GEN-LAST:event_removeDateButtonActionPerformed
+    private void addDateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDateButtonActionPerformed
         DateInput di = new DateInput(tmpContent, tmpMetadata);
         di.setVisible(true);
-    }//GEN-LAST:event_addDateActionPerformed
-
+    }//GEN-LAST:event_addDateButtonActionPerformed
+    private void removeSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeSubjectButtonActionPerformed
+        if(tmpMetadata.getSubjects().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Brak elemantów do usunięcia!");
+        }else{
+            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, tmpMetadata.getSubjects());
+            listItemSelection.setVisible(true);
+        }
+    }//GEN-LAST:event_removeSubjectButtonActionPerformed
+    private void addSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSubjectButtonActionPerformed
+        String subject = JOptionPane.showInputDialog(this, "Dodaj temat", null);
+        tmpMetadata.addSubject(subject);
+        eBookWriter.appendNode("metadata", "dc:subject", "", "", subject);
+    }//GEN-LAST:event_addSubjectButtonActionPerformed
+    private void removeRightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeRightButtonActionPerformed
+        if(tmpMetadata.getRights().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Brak elemantów do usunięcia!");
+        }else{
+            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, tmpMetadata.getRights());
+            listItemSelection.setVisible(true);
+        }
+    }//GEN-LAST:event_removeRightButtonActionPerformed
+    private void addRightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRightButtonActionPerformed
+        String right = JOptionPane.showInputDialog(this, "Dodaj uprawnienie", null);
+        tmpMetadata.addRight(right);
+        eBookWriter.appendNode("metadata", "dc:right", "", "", right);
+    }//GEN-LAST:event_addRightButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addCreator;
-    private javax.swing.JButton addDate;
-    private javax.swing.JButton addPublisher;
+    private javax.swing.JButton addCreatorButton;
+    private javax.swing.JButton addDateButton;
+    private javax.swing.JButton addPublisherButton;
+    private javax.swing.JButton addRightButton;
+    private javax.swing.JButton addSubjectButton;
     private javax.swing.JButton cancellButton;
     private javax.swing.JLabel creatorLabel;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox<String> languageComboBox;
+    private javax.swing.JLabel languageLabel;
     private javax.swing.JLabel publisherLabel;
-    private javax.swing.JButton removeCreator;
-    private javax.swing.JButton removeDate;
-    private javax.swing.JButton removePublisher;
+    private javax.swing.JButton removeCreatorButton;
+    private javax.swing.JButton removeDateButton;
+    private javax.swing.JButton removePublisherButton;
+    private javax.swing.JButton removeRightButton;
+    private javax.swing.JButton removeSubjectButton;
+    private javax.swing.JLabel rightsLabel;
     private javax.swing.JButton saveButton;
+    private javax.swing.JLabel sourceLabel;
+    private javax.swing.JTextField sourceText;
+    private javax.swing.JLabel subjectsLabel;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JTextField titleText;
     // End of variables declaration//GEN-END:variables

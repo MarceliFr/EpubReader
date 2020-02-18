@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -236,12 +237,17 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     }//GEN-LAST:event_plikZamknijActionPerformed
     private void plikZnajdzPublikacjeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plikZnajdzPublikacjeActionPerformed
         jfc = new javax.swing.JFileChooser();
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("eBook", "epub", "zip");
+        jfc.addChoosableFileFilter(fnef);
+        jfc.setFileFilter(fnef);
         jfc.showOpenDialog(null);
         jfc.setName("Znadjowanie E-Booków");
         path = jfc.getSelectedFile().getAbsolutePath();
         try {
             eBookReader = new EBookReader(path);
-            eBook = eBookReader.readEBook();
+            if(eBookReader.isEBook(path) == true){
+                eBook = eBookReader.readEBook();
+            }
         } catch (IOException | ParserConfigurationException | SAXException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -260,7 +266,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         try {
             EdytujMetadane edytujMetadane = new EdytujMetadane(eBook);
             edytujMetadane.setVisible(true);
-        } catch (IOException ex) {
+        } catch (IOException | CloneNotSupportedException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_publikacjaEdytujMetadaneActionPerformed

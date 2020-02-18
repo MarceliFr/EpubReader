@@ -98,4 +98,7 @@ class EBook{
         }
         return matchingNode;
     }
+    public NodeList findNodeList(String elementName){
+        return content.getElementsByTagName(elementName);
+    }
 }

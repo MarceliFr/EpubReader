@@ -3,10 +3,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -27,6 +25,9 @@ public class EBookReader {
     public EBookReader(String eBookPath){
         this.eBookPath = eBookPath;
     }
+    boolean isEBook(String path) {
+        return true;
+    }
     public EBook readEBook() throws IOException, ParserConfigurationException, SAXException{
         eBook = new EBook(eBookPath);
         eBook.setZipFile();
@@ -44,45 +45,35 @@ public class EBookReader {
         return eBook;
     }
     private Metadata readMetadata() {
-        Metadata metadata = new Metadata(eBook.findNode(eBook.getContent(), "metadata", true));
-        ArrayList<String> creatorstmp = new ArrayList<>();
-        for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:creator").size();i++){
-            creatorstmp.add((findNodeList(metadata.getMetadataNode(), "dc:creator")).get(i).getTextContent());
+        Metadata metadata = new Metadata(EBook.findNode(eBook.getContent(), "metadata", true));
+        for(int i=0;i<eBook.findNodeList("dc:creator").getLength();i++){
+            metadata.addCreator((eBook.findNodeList("dc:creator")).item(i).getTextContent());
         }
-        metadata.setCreators(creatorstmp);
         metadata.setTitle((EBook.findNode(metadata.getMetadataNode(), "dc:title", true)).getTextContent());
-        ArrayList<String> publisherstmp = new ArrayList<>();
-        for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:publisher").size();i++){
-            publisherstmp.add((findNodeList(metadata.getMetadataNode(), "dc:publisher")).get(i).getTextContent());
+        for(int i=0;i<eBook.findNodeList("dc:publisher").getLength();i++){
+            metadata.addPublisher((eBook.findNodeList("dc:publisher")).item(i).getTextContent());
         }
-        metadata.setPublishers(publisherstmp);
-        ArrayList<String> datestmp = new ArrayList<>();
         String datetmp;
-        for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:date").size();i++){
-            datetmp = (findNodeList(metadata.getMetadataNode(), "dc:date")).get(i).getAttributes().item(0).getTextContent();
+        for(int i=0;i<eBook.findNodeList("dc:date").getLength();i++){
+            datetmp = (eBook.findNodeList("dc:date")).item(i).getAttributes().item(0).getTextContent();
             datetmp += ": ";
-            datetmp += (findNodeList(metadata.getMetadataNode(), "dc:date")).get(i).getTextContent();
-            datestmp.add(datetmp);
+            datetmp += (eBook.findNodeList("dc:date")).item(i).getTextContent();
+            metadata.addDate(datetmp);
         }
-        metadata.setDates(datestmp);
-        ArrayList<String> subjectstmp = new ArrayList<>();
-        for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:subject").size();i++){
-            subjectstmp.add((findNodeList(metadata.getMetadataNode(), "dc:subject")).get(i).getTextContent());
+        for(int i=0;i<eBook.findNodeList("dc:subject").getLength();i++){
+            metadata.addSubject((eBook.findNodeList("dc:subject")).item(i).getTextContent());
         }
-        metadata.setSubjects(subjectstmp);
         if(EBook.findNode(eBook.getContent(), "dc:source", true) != null){
-            metadata.setSource((eBook.findNode(eBook.getContent(), "dc:source", true)).getTextContent());
+            metadata.setSource((EBook.findNode(eBook.getContent(), "dc:source", true)).getTextContent());
         }
-        ArrayList<String> rightstmp = new ArrayList<>();
-        for(int i=0;i<findNodeList(metadata.getMetadataNode(), "dc:rights").size();i++){
-            rightstmp.add((findNodeList(metadata.getMetadataNode(), "dc:rights")).get(i).getTextContent());
+        for(int i=0;i<eBook.findNodeList("dc:rights").getLength();i++){
+            metadata.addRight((eBook.findNodeList("dc:rights")).item(i).getTextContent());
         }
-        metadata.setRights(rightstmp);
-        metadata.setLanguage((eBook.findNode(eBook.getContent(), "dc:language", true)).getTextContent().toUpperCase());
+        metadata.setLanguage((EBook.findNode(eBook.getContent(), "dc:language", true)).getTextContent().toUpperCase());
         return metadata;
     }
     private Map<String, String> readSpineMap() {
-        Node spineNode = eBook.findNode(eBook.getContent(), "spine", true);
+        Node spineNode = EBook.findNode(eBook.getContent(), "spine", true);
         Map<String, String> spineMap = new HashMap<>();
         
         String key = null;
@@ -113,7 +104,7 @@ public class EBookReader {
         return null;
     }
     private Map<String, String> readGuideMap() {
-        Node guideNode = eBook.findNode(eBook.getContent(), "guide", true);
+        Node guideNode = EBook.findNode(eBook.getContent(), "guide", true);
         Map<String, String> guideMap = new HashMap<>();
         
         String key = null;
@@ -163,19 +154,5 @@ public class EBookReader {
             }
         }
         return null;
-    }
-    public List<Node> findNodeList(Node root, String elementName){
-        //Check to see if root has any children if not return null
-        if (!(root.hasChildNodes())){
-            return null;
-        }
-        List<Node> nodeList = new ArrayList<>();
-        for(int i=0;i<root.getChildNodes().getLength();i++){
-            Node element = root.getChildNodes().item(i);
-            if (element.getNodeName().equals(elementName)){
-                nodeList.add(element);
-            }
-        }
-        return nodeList;
     }
 }
