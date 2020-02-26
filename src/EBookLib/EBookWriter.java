@@ -1,15 +1,15 @@
 package EBookLib;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.util.Map;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -24,26 +24,28 @@ import org.w3c.dom.Node;
 import static org.w3c.dom.Node.TEXT_NODE;
 
 public class EBookWriter {
-    private final Document source;
     private final EBook eBook;
     
-    public EBookWriter(Document source, EBook eBook){
+    public EBookWriter(EBook eBook){
         this.eBook = eBook;
-        this.source = source;
     }
-    public void appendNode(String parentNodeName, String newNodeName, String newNodeArgument, String newNodeArgumentValue, String newNodetextContent){
+    public void appendNode(Document source, String parentNodeName, String newNodeName, Map<String, String> arguments, String textContent){
         Node appendNode = eBook.findNode(source, parentNodeName, true);
         Element newNode = source.createElement(newNodeName);
-        if(!("".equals(newNodeArgument))){
-            newNode.setAttribute(newNodeArgument, newNodeArgumentValue);
+        if(arguments != null){
+            arguments.keySet().forEach((String key) -> {
+                newNode.setAttribute(key, arguments.get(key));
+            });
         }
-        newNode.appendChild(source.createTextNode(newNodetextContent));
+        if(!"".equals(textContent)) {
+            newNode.appendChild(source.createTextNode(textContent));
+        }
         appendNode.appendChild(newNode);
         source.normalize();
     }
-    public void updateNode(String parentNodeName, String nodeName, String newText) {
+    public void updateNode(Document source, String parentNodeName, String nodeName, String newText) {
         if(eBook.findNode(source, nodeName, true) == null){
-            appendNode(parentNodeName, nodeName, "", "", newText);
+            appendNode(source, parentNodeName, nodeName, null, newText);
         }else{
             replaceText(eBook.findNode(source, nodeName, true), newText);
         }
@@ -57,7 +59,7 @@ public class EBookWriter {
             chld.setNodeValue(val);
         }      
     }
-    public void removeNode(String parentNodeName, String textContent) {
+    public void removeNode(Document source, String parentNodeName, String textContent) {
         Node toRemoveParent = eBook.findNode(source, parentNodeName, true);
         if(toRemoveParent.hasChildNodes()){
             for(int i=0;i<toRemoveParent.getChildNodes().getLength();i++){
@@ -69,23 +71,26 @@ public class EBookWriter {
         }
         source.normalize();
     }
-    public void saveContentChanges() throws IOException, TransformerException{
-        eBook.getZipFile().close();
+    public void saveContentChanges(Document source) throws IOException, TransformerException{
         DOMSource fromWhere = new DOMSource(source);
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        Path p = Paths.get(eBook.getPath());
-        try (FileSystem fs = FileSystems.newFileSystem(p, null)){
-            Path nf = fs.getPath(eBook.getContentPath());
-            try (Writer writer = Files.newBufferedWriter(nf, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
-                StreamResult result = new StreamResult(writer);
-                transformer.transform(fromWhere, result);
-            }
+        Path nf = eBook.getFileSystem().getPath(eBook.findFile("content.opf"));
+        try (Writer writer = Files.newBufferedWriter(nf, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
+            StreamResult result = new StreamResult(writer);
+            transformer.transform(fromWhere, result);
         }
-        eBook.openZipFile();
     }
-    public void appendFile(){
-        
+    public void appendFile(String filePath) throws IOException{
+        File toCopyFile = new File(filePath);
+        Path copyPath = toCopyFile.toPath();
+        System.out.println(copyPath);
+        String toCopyFileName = toCopyFile.getName();
+        String targetPathName = eBook.findFile("content.opf");
+        targetPathName = targetPathName.replace("content.opf", toCopyFileName);
+        Path targetPath = eBook.getFileSystem().getPath(targetPathName);
+        System.out.println(targetPath);
+        Files.copy(copyPath, targetPath, StandardCopyOption.REPLACE_EXISTING);
     }
 }

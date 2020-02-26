@@ -9,22 +9,22 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import org.w3c.dom.Document;
 
 public class DateInput extends javax.swing.JFrame {
     private final Document tmpContent;
-    private final EBook eBook;
+    private final EBookWriter eBookWriter;
     private final Metadata tmpMetadata;
     private final DateFormat df;
-    private final EBookWriter eBookWriter;
     
-    DateInput(Document tmpContent, EBook eBook, Metadata tmpMetadata) {
+    DateInput(Document tmpContent, EBookWriter eBookWriter, Metadata tmpMetadata) {
         this.tmpContent = tmpContent;
-        this.eBook = eBook;
+        this.eBookWriter = eBookWriter;
         this.tmpMetadata = tmpMetadata;
         df = new SimpleDateFormat("yyyy-MM-dd");
-        eBookWriter = new EBookWriter(tmpContent, eBook);
         initComponents();
     }
     
@@ -137,7 +137,9 @@ public class DateInput extends javax.swing.JFrame {
             try {
                 Date date = df.parse(dateText.getText());
                 tmpMetadata.addDate(datePropertyText.getText(), date.toString());
-                eBookWriter.appendNode("metadata", "dc:date", "opf:event", datePropertyText.getText(), df.format(date));
+                Map<String, String> dateMap = new HashMap<>();
+                dateMap.put("dc:date", datePropertyText.getText());
+                eBookWriter.appendNode(tmpContent, "metadata", "dc:date", dateMap, df.format(date));
                 dispose();
             } catch (ParseException e) {
                 JOptionPane.showMessageDialog(this, "nieprawidłowy format daty");

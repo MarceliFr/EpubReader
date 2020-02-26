@@ -1,6 +1,5 @@
 package EpubReader;
 
-import EBookLib.EBook;
 import EBookLib.EBookWriter;
 
 import java.util.List;
@@ -9,12 +8,12 @@ import org.w3c.dom.Document;
 
 public class ListItemSelection extends javax.swing.JFrame {
     private final Document tmpContent;
-    private final EBook eBook;
+    private final EBookWriter eBookWriter;
     private final List<String> items;
     
-    ListItemSelection(Document tmpContent, EBook eBook, List<String> items) {
+    ListItemSelection(Document tmpContent, EBookWriter eBookWriter, List<String> items) {
         this.tmpContent = tmpContent;
-        this.eBook = eBook;
+        this.eBookWriter = eBookWriter;
         this.items = items;
         initComponents();
         DefaultListModel lm1 = new DefaultListModel();
@@ -92,10 +91,8 @@ public class ListItemSelection extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void removeElementButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeElementButtonActionPerformed
-        EBookWriter eBookWriter = new EBookWriter(tmpContent, eBook);
-        eBookWriter.removeNode("metadata", itemList.getSelectedValue());
+        eBookWriter.removeNode(tmpContent, "metadata", itemList.getSelectedValue());
         for(int i=0;i<items.size();i++){
             if(items.get(i).equals(itemList.getSelectedValue())){
                 items.remove(i);

@@ -1,13 +1,16 @@
 package EpubReader;
 
 import EBookLib.EBook;
+import EBookLib.EBookFactory;
 import EBookLib.EBookReader;
 import EBookLib.EBookWriter;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+
 import java.io.IOException;
-import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,11 +18,13 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 public class EpubReader_Marceli extends javax.swing.JFrame {
     private EBookReader eBookReader;
+    private EBookWriter eBookWriter;
     private EBook eBook;
     private String path;
     
@@ -77,6 +82,11 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("EpubReader Marceli");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         fontToolBar.setRollover(true);
         fontToolBar.setEnabled(false);
@@ -130,7 +140,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(fontToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))
         );
 
         jSplitPane1.setRightComponent(jPanel1);
@@ -244,7 +254,12 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void plikZamknijActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plikZamknijActionPerformed
-        System.exit(0);
+        try {
+            eBook.close();
+            System.exit(0);
+        } catch (IOException ex) {
+            Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_plikZamknijActionPerformed
     private void plikZnajdzPublikacjeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plikZnajdzPublikacjeActionPerformed
         jfc = new javax.swing.JFileChooser();
@@ -255,11 +270,13 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         jfc.setName("Znadjowanie E-Booków");
         path = jfc.getSelectedFile().getAbsolutePath();
         try {
-            eBookReader = new EBookReader();
-            if(eBookReader.isEBook(path) == true){
-                eBook = eBookReader.readEBook(path);
+            EBookFactory eBookFactory = new EBookFactory();
+            if(eBookFactory.isEBook(path) == true){
+                eBook = eBookFactory.readEBook(path);
             }
-        } catch (IOException | ParserConfigurationException | SAXException | ParseException ex) {
+            eBookReader = new EBookReader(eBook);
+            eBookWriter = new EBookWriter(eBook);
+        } catch (IOException | ParserConfigurationException | SAXException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
         eBook.getSpineMap().keySet().forEach((_item) -> {spineListModel.addElement(_item);
@@ -273,7 +290,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     }//GEN-LAST:event_plikZnajdzPublikacjeActionPerformed
     private void publikacjaEdytujMetadaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaEdytujMetadaneActionPerformed
         try {
-            EdytujMetadane edytujMetadane = new EdytujMetadane(eBook);
+            EdytujMetadane edytujMetadane = new EdytujMetadane(eBook, eBookWriter);
             edytujMetadane.setVisible(true);
         } catch (IOException | CloneNotSupportedException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
@@ -296,7 +313,6 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     private void spineListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_spineListValueChanged
         try {
             if(((javax.swing.JList)evt.getSource()).getSelectedValue() != null){
-                System.out.println();
                 String text = eBookReader.readTextFromSpine(((javax.swing.JList)evt.getSource()).getSelectedValue().toString());
                 eBookText.setText(text);
             }
@@ -319,7 +335,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_guideListValueChanged
     private void showMetadaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMetadaneActionPerformed
-        PokazMetadane pokazMetadane = new PokazMetadane(eBook);
+        PokazMetadane pokazMetadane = new PokazMetadane(eBook, eBookWriter);
         pokazMetadane.setVisible(true);
     }//GEN-LAST:event_showMetadaneActionPerformed
     private void fontSizeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_fontSizeSpinnerStateChanged
@@ -334,13 +350,43 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         eBookText.setFont(newTextFont);
     }//GEN-LAST:event_fontChooseItemStateChanged
     private void publikacjaDodajOkladkeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaDodajOkladkeActionPerformed
-        jfc = new javax.swing.JFileChooser();
-        jfc.showOpenDialog(null);
-        jfc.setName("Dodawanie okładki");
-        
-        Document tmpContent = eBook.getContent();
-        EBookWriter eBookWriter = new EBookWriter(tmpContent, eBook);
+        if(!eBook.hasCover()){
+            try {
+                jfc = new javax.swing.JFileChooser();
+                FileNameExtensionFilter fnef = new FileNameExtensionFilter("cover", "html");
+                jfc.addChoosableFileFilter(fnef);
+                jfc.setFileFilter(fnef);
+                jfc.showOpenDialog(null);
+                jfc.setName("Dodawanie okładki");
+                String coverpath = jfc.getSelectedFile().getAbsolutePath();
+                
+                Document tmpContent = eBook.getContent();
+                Map<String, String> spineNodeArguments = new HashMap<>();
+                spineNodeArguments.put("idref", "Cover");
+                eBookWriter.appendNode(tmpContent, "spine", "itemref", spineNodeArguments, "");
+                
+                Map<String, String> manifestNodeArguments = new HashMap<>();
+                manifestNodeArguments.put("id", "Cover");
+                manifestNodeArguments.put("href", jfc.getSelectedFile().getName());
+                manifestNodeArguments.put("media-type", "application/xhtml+xml");
+                eBookWriter.appendNode(tmpContent, "manifest", "item", manifestNodeArguments, "");
+                
+                eBookWriter.saveContentChanges(tmpContent);
+                eBookWriter.appendFile(coverpath);
+            } catch (IOException | TransformerException ex) {
+                Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Książka ma już okładkę");
+        }
     }//GEN-LAST:event_publikacjaDodajOkladkeActionPerformed
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            eBook.close();
+        } catch (IOException ex) {
+            Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowClosing
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             new EpubReader_Marceli().setVisible(true);

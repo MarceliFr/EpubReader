@@ -1,6 +1,7 @@
 package EpubReader;
 
 import EBookLib.EBook;
+import EBookLib.EBookWriter;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -8,9 +9,11 @@ import java.util.logging.Logger;
 
 public class PokazMetadane extends javax.swing.JDialog {
     private final EBook eBook;
+    private final EBookWriter eBookWriter;
         
-    public PokazMetadane(EBook eBook) {
+    public PokazMetadane(EBook eBook, EBookWriter eBookWriter) {
         this.eBook = eBook;
+        this.eBookWriter = eBookWriter;
         initComponents();
     }
 
@@ -286,7 +289,7 @@ public class PokazMetadane extends javax.swing.JDialog {
 
     private void editButtomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtomActionPerformed
         try {
-            EdytujMetadane edytujMetadane = new EdytujMetadane(eBook);
+            EdytujMetadane edytujMetadane = new EdytujMetadane(eBook, eBookWriter);
             edytujMetadane.setVisible(true);
             dispose();
         } catch (IOException | CloneNotSupportedException ex) {

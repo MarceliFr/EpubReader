@@ -21,11 +21,11 @@ class EdytujMetadane extends javax.swing.JDialog {
     private final Metadata tmpMetadata;
     private final EBookWriter eBookWriter;
     
-    public EdytujMetadane(EBook eBook) throws IOException, CloneNotSupportedException {
+    public EdytujMetadane(EBook eBook, EBookWriter eBookWriter) throws IOException, CloneNotSupportedException {
         this.eBook = eBook;
         tmpContent = eBook.getContent();
         tmpMetadata = (Metadata)eBook.getMetadata().clone();
-        eBookWriter = new EBookWriter(tmpContent, eBook);
+        this.eBookWriter = eBookWriter;
         initComponents();
     }
     
@@ -323,13 +323,13 @@ class EdytujMetadane extends javax.swing.JDialog {
     private void addCreatorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCreatorButtonActionPerformed
         String creator = JOptionPane.showInputDialog(this, "Dodaj autora", null);
         tmpMetadata.addCreator(creator);
-        eBookWriter.appendNode("metadata", "dc:creator", "", "", creator);
+        eBookWriter.appendNode(tmpContent, "metadata", "dc:creator", null, creator);
     }//GEN-LAST:event_addCreatorButtonActionPerformed
     private void removeCreatorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeCreatorButtonActionPerformed
         if(tmpMetadata.getCreators().isEmpty()){
             JOptionPane.showMessageDialog(this, "Brak elemantów do usunięcia!");
         }else{
-            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, eBook, tmpMetadata.getCreators());
+            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, eBookWriter, tmpMetadata.getCreators());
             listItemSelection.setVisible(true);
         }
     }//GEN-LAST:event_removeCreatorButtonActionPerformed
@@ -337,18 +337,18 @@ class EdytujMetadane extends javax.swing.JDialog {
         try {
             if(!titleText.getText().equals(eBook.getMetadata().getTitle())){
                 tmpMetadata.setTitle(titleText.getText());
-                eBookWriter.updateNode("metadata", "dc:title", titleText.getText());
+                eBookWriter.updateNode(tmpContent, "metadata", "dc:title", titleText.getText());
             }
             if(!sourceText.getText().equals(eBook.getMetadata().getSource())){
                 tmpMetadata.setSource(sourceText.getText());
-                eBookWriter.updateNode("metadata", "dc:source", sourceText.getText());
+                eBookWriter.updateNode(tmpContent, "metadata", "dc:source", sourceText.getText());
             }
             if(!(languageComboBox.getSelectedItem().toString().equals(tmpMetadata.getLanguage()))){
                 tmpMetadata.setLanguage(languageComboBox.getSelectedItem().toString());
-                eBookWriter.updateNode("metadata", "dc:language", languageComboBox.getSelectedItem().toString().toLowerCase());
+                eBookWriter.updateNode(tmpContent, "metadata", "dc:language", languageComboBox.getSelectedItem().toString().toLowerCase());
             }
             eBook.setMetadata(tmpMetadata);
-            eBookWriter.saveContentChanges();
+            eBookWriter.saveContentChanges(tmpContent);
             dispose();
         } catch (IOException | TransformerException ex) {
             Logger.getLogger(EdytujMetadane.class.getName()).log(Level.SEVERE, null, ex);
@@ -360,13 +360,13 @@ class EdytujMetadane extends javax.swing.JDialog {
     private void addPublisherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPublisherButtonActionPerformed
         String publisher = JOptionPane.showInputDialog(this, "Dodaj wydawcę", null);
         tmpMetadata.addPublisher(publisher);
-        eBookWriter.appendNode("metadata", "dc:publisher", "", "", publisher);
+        eBookWriter.appendNode(tmpContent, "metadata", "dc:publisher", null, publisher);
     }//GEN-LAST:event_addPublisherButtonActionPerformed
     private void removePublisherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePublisherButtonActionPerformed
         if(tmpMetadata.getPublishers().isEmpty()){
             JOptionPane.showMessageDialog(this, "Brak elemantów do usunięcia!");
         }else{
-            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, eBook, tmpMetadata.getPublishers());
+            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, eBookWriter, tmpMetadata.getPublishers());
             listItemSelection.setVisible(true);
         }
     }//GEN-LAST:event_removePublisherButtonActionPerformed
@@ -378,39 +378,39 @@ class EdytujMetadane extends javax.swing.JDialog {
             List<String> datesOnly = new ArrayList<>();
             dates.forEach((_item) -> {datesOnly.add(_item);
             });
-            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, eBook, datesOnly);
+            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, eBookWriter, datesOnly);
             listItemSelection.setVisible(true);
         }
     }//GEN-LAST:event_removeDateButtonActionPerformed
     private void addDateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDateButtonActionPerformed
-        DateInput di = new DateInput(tmpContent, eBook, tmpMetadata);
+        DateInput di = new DateInput(tmpContent, eBookWriter, tmpMetadata);
         di.setVisible(true);
     }//GEN-LAST:event_addDateButtonActionPerformed
     private void removeSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeSubjectButtonActionPerformed
         if(tmpMetadata.getSubjects().isEmpty()){
             JOptionPane.showMessageDialog(this, "Brak elemantów do usunięcia!");
         }else{
-            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, eBook, tmpMetadata.getSubjects());
+            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, eBookWriter, tmpMetadata.getSubjects());
             listItemSelection.setVisible(true);
         }
     }//GEN-LAST:event_removeSubjectButtonActionPerformed
     private void addSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSubjectButtonActionPerformed
         String subject = JOptionPane.showInputDialog(this, "Dodaj temat", null);
         tmpMetadata.addSubject(subject);
-        eBookWriter.appendNode("metadata", "dc:subject", "", "", subject);
+        eBookWriter.appendNode(tmpContent, "metadata", "dc:subject", null, subject);
     }//GEN-LAST:event_addSubjectButtonActionPerformed
     private void removeRightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeRightButtonActionPerformed
         if(tmpMetadata.getRights().isEmpty()){
             JOptionPane.showMessageDialog(this, "Brak elemantów do usunięcia!");
         }else{
-            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, eBook, tmpMetadata.getRights());
+            ListItemSelection listItemSelection = new ListItemSelection(tmpContent, eBookWriter, tmpMetadata.getRights());
             listItemSelection.setVisible(true);
         }
     }//GEN-LAST:event_removeRightButtonActionPerformed
     private void addRightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRightButtonActionPerformed
         String right = JOptionPane.showInputDialog(this, "Dodaj uprawnienie", null);
         tmpMetadata.addRight(right);
-        eBookWriter.appendNode("metadata", "dc:right", "", "", right);
+        eBookWriter.appendNode(tmpContent, "metadata", "dc:right", null, right);
     }//GEN-LAST:event_addRightButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCreatorButton;

@@ -1,0 +1,148 @@
+package EBookLib;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
+
+public class EBookFactory {
+    private EBook eBook;
+    
+    public EBookFactory(){}
+    
+    public boolean isEBook(String path) throws IOException {
+        File testFile = new File(path);
+        String mimetypeContent;
+        try (FileSystem fileSystem = FileSystems.newFileSystem(testFile.toPath(), null)) {
+            Path content = fileSystem.getPath("/mimetype");
+            try (InputStream is = fileSystem.provider().newInputStream(content)){
+                mimetypeContent = inputStreamToString(is);
+            }
+        }
+        return mimetypeContent.equals("application/epub+zip");
+    }
+    public EBook readEBook(String eBookPath) throws ParserConfigurationException, IOException, SAXException{
+        eBook = new EBook(eBookPath);
+        File testFile = new File(eBookPath);
+        FileSystem fileSystem = FileSystems.newFileSystem(testFile.toPath(), null);
+        eBook.setFileSystem(fileSystem);
+        Path root = fileSystem.getPath("/");
+        fillFiles(eBook, root);
+        
+        DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document content;
+        Path contentPath = fileSystem.getPath(eBook.findFile("content.opf"));
+        try (InputStream is = fileSystem.provider().newInputStream(contentPath)){
+            content = dBuilder.parse(is);
+        }
+        eBook.setContent(content);
+        eBook.setMetadata(readMetadata());
+        fillSpineMap();
+        fillGuideMap();
+        return eBook;
+    }
+    private Metadata readMetadata(){
+        Metadata metadata = new Metadata();
+        for(int i=0;i<eBook.findNodeList("dc:creator").getLength();i++){
+            metadata.addCreator((eBook.findNodeList("dc:creator")).item(i).getTextContent());
+        }
+        metadata.setTitle((eBook.findNode(eBook.getContent(), "dc:title", true)).getTextContent());
+        for(int i=0;i<eBook.findNodeList("dc:publisher").getLength();i++){
+            metadata.addPublisher((eBook.findNodeList("dc:publisher")).item(i).getTextContent());
+        }
+        String key = null;
+        String value;
+        for(int i=0;i<eBook.findNodeList("dc:date").getLength();i++){
+            key = (eBook.findNodeList("dc:date")).item(i).getAttributes().item(0).getTextContent();
+            value = eBook.findNodeList("dc:date").item(i).getTextContent();
+            metadata.addDate(key, value);
+        }
+        for(int i=0;i<eBook.findNodeList("dc:subject").getLength();i++){
+            metadata.addSubject((eBook.findNodeList("dc:subject")).item(i).getTextContent());
+        }
+        if(eBook.findNode(eBook.getContent(), "dc:source", true) != null){
+            metadata.setSource((eBook.findNode(eBook.getContent(), "dc:source", true)).getTextContent());
+        }
+        for(int i=0;i<eBook.findNodeList("dc:rights").getLength();i++){
+            metadata.addRight((eBook.findNodeList("dc:rights")).item(i).getTextContent());
+        }
+        metadata.setLanguage((eBook.findNode(eBook.getContent(), "dc:language", true)).getTextContent().toUpperCase());
+        return metadata;
+    }
+    public void fillFiles(EBook eBook, Path root) throws IOException{
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(root)) {
+            for (Path path : stream) {
+                if(path.toString().endsWith("/")){
+                    fillFiles(eBook, path);
+                }else{
+                    eBook.addFile(path.toString());
+                }
+            }
+        }
+    }
+    private void fillSpineMap() {
+        Node spineNode = eBook.findNode(eBook.getContent(), "spine", true);
+        
+        String key = null;
+        String value;
+        
+        if(spineNode.hasChildNodes()){
+            for(int i=0;i<spineNode.getChildNodes().getLength();i++){
+                Node spineElement = spineNode.getChildNodes().item(i);
+                if(spineElement.getNodeType() == 1){
+                    key = spineElement.getAttributes().getNamedItem("idref").getNodeValue();
+                    value = (findHref(key));
+                    eBook.addToSpineMap(key, value);
+                }
+            }
+        }
+    }
+    private String findHref(String key) {
+        Node manifestNode = eBook.findNode(eBook.getContent(), "manifest", true);
+        if(manifestNode.hasChildNodes()){
+            for(int i=0;i<manifestNode.getChildNodes().getLength();i++){
+                Node manifestElement = manifestNode.getChildNodes().item(i);
+                if((manifestElement.getNodeType() == 1) && (manifestElement.getAttributes().getNamedItem("id").getNodeValue().equals(key))){
+                    return manifestElement.getAttributes().getNamedItem("href").getNodeValue();
+                }
+            }
+        }
+        return null;
+    }
+    private void fillGuideMap() {
+        Node guideNode = eBook.findNode(eBook.getContent(), "guide", true);
+        Map<String, String> guideMap = new HashMap<>();
+        
+        String key = null;
+        String value;
+        
+        if(guideNode != null && guideNode.hasChildNodes()){
+            for(int i=0;i<guideNode.getChildNodes().getLength();i++){
+                Node guideElement = guideNode.getChildNodes().item(i);
+                if(guideElement.getNodeType() == 1){
+                    key = guideElement.getAttributes().getNamedItem("title").getNodeValue();
+                    value = guideElement.getAttributes().getNamedItem("href").getNodeValue();
+                    eBook.addToGuideMap(key, value);
+                }
+            }
+        }
+    }
+    public static String inputStreamToString(InputStream inputStream) {
+        //In Java 9 use inputStream.readAllBytes()
+        return new Scanner(inputStream, "UTF-8").useDelimiter("\\A").next();
+    }
+}

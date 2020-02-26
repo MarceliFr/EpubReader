@@ -1,24 +1,26 @@
 package EBookLib;
 
 import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.ZipFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class EBook{
     private final String path;
-    private ZipFile zFile;
-    private String contentPath;
+    private FileSystem fileSystem;
+    private final ArrayList<String> fileList;
     private Document content;
-    private Map<String, String> spineMap;
-    private Map<String, String> guideMap;
+    private final Map<String, String> spineMap;
+    private final Map<String, String> guideMap;
     private Metadata metadata;
-    
+        
     public EBook(String path) {
         this.path = path;
+        fileList = new ArrayList<>();
         spineMap = new HashMap<>();
         guideMap = new HashMap<>();
     }
@@ -26,11 +28,24 @@ public class EBook{
     public String getPath(){
         return path;
     }
-    public void setContentPath(String contentPath) {
-        this.contentPath = contentPath;
+    public void setFileSystem(FileSystem fileSystem){
+        this.fileSystem = fileSystem;
     }
-    public String getContentPath(){
-        return contentPath;
+    public FileSystem getFileSystem(){
+        return fileSystem;
+    }
+    public void addFile(String filePath){
+        fileList.add(filePath);
+    }
+    public String findFile(String fileName){
+        String filePath = null;
+        for (String file : fileList) {
+            if(file.endsWith(fileName)){
+                filePath = file;
+                break;
+            }
+        }
+        return filePath;
     }
     public void setContent(Document content) {
         this.content = content;
@@ -38,32 +53,37 @@ public class EBook{
     public Document getContent(){
         return content;
     }
-    void openZipFile() throws IOException {
-        zFile = new ZipFile(path);
-    }
-    public ZipFile getZipFile(){
-        return zFile;
-    }
     public void setMetadata(Metadata metadata){
         this.metadata = metadata;
     }
     public Metadata getMetadata(){
         return this.metadata;
     }
-    public void setSpineMap(Map<String, String> spineMap) {
-        this.spineMap = spineMap;
+    public void addToSpineMap(String key, String value) {
+        spineMap.put(key, value);
     }
     public Map<String, String> getSpineMap(){
         return spineMap;
     }
-    public void setGuideMap(Map<String, String> guideMap) {
-        this.guideMap = guideMap;
+    public void addToGuideMap(String key, String value) {
+        guideMap.put(key, value);
     }
     public Map<String, String> getGuideMap(){
         return guideMap;
     }
-    public void close() throws IOException {
-        zFile.close();
+    public boolean hasCover(){
+        boolean isCover = false;
+        for(int i=0;i<content.getElementsByTagName("item").getLength();i++){
+            for(int j=0;j<content.getElementsByTagName("item").item(i).getAttributes().getLength();j++){
+                if(content.getElementsByTagName("item").item(i).getAttributes().item(j).getTextContent().toLowerCase().contains("cover")){
+                    isCover = true;
+                }
+            }
+            if(isCover == true){
+                break;
+            }
+        }
+        return isCover;
     }
     public Node findNode(Node root, String elementName, boolean deep) {
         //Check to see if root has any children if not return null
@@ -95,5 +115,11 @@ public class EBook{
     }
     public NodeList findNodeList(String elementName){
         return content.getElementsByTagName(elementName);
+    }
+    public void close() throws IOException{
+        fileSystem.close();
+        fileList.removeAll(fileList);
+        spineMap.clear();
+        guideMap.clear();
     }
 }
