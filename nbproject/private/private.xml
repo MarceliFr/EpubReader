@@ -3,15 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/Metadata.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EBook.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EdytujMetadane.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/DateInput.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EBookReader.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/ListItemSelection.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/PokazMetadane.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EpubReader_Marceli.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EBookWriter.java</file>
+            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EBookLib/EBook.java</file>
         </group>
     </open-files>
 </project-private>
