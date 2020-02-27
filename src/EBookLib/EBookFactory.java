@@ -50,37 +50,37 @@ public class EBookFactory {
             content = dBuilder.parse(is);
         }
         eBook.setContent(content);
-        eBook.setMetadata(readMetadata());
+        eBook.setMetadata(readMetadata(eBook.getContent()));
         fillSpineMap();
         fillGuideMap();
         return eBook;
     }
-    private Metadata readMetadata(){
+    private Metadata readMetadata(Document content){
         Metadata metadata = new Metadata();
-        for(int i=0;i<eBook.findNodeList("dc:creator").getLength();i++){
-            metadata.addCreator((eBook.findNodeList("dc:creator")).item(i).getTextContent());
+        for(int i=0;i<EBookReader.findNodeList(content, "dc:creator").getLength();i++){
+            metadata.addCreator((EBookReader.findNodeList(content, "dc:creator")).item(i).getTextContent());
         }
-        metadata.setTitle((eBook.findNode(eBook.getContent(), "dc:title", true)).getTextContent());
-        for(int i=0;i<eBook.findNodeList("dc:publisher").getLength();i++){
-            metadata.addPublisher((eBook.findNodeList("dc:publisher")).item(i).getTextContent());
+        metadata.setTitle((EBookReader.findNodeByName(content, "dc:title", true)).getTextContent());
+        for(int i=0;i<EBookReader.findNodeList(content, "dc:publisher").getLength();i++){
+            metadata.addPublisher((EBookReader.findNodeList(content, "dc:publisher")).item(i).getTextContent());
         }
         String key = null;
         String value;
-        for(int i=0;i<eBook.findNodeList("dc:date").getLength();i++){
-            key = (eBook.findNodeList("dc:date")).item(i).getAttributes().item(0).getTextContent();
-            value = eBook.findNodeList("dc:date").item(i).getTextContent();
+        for(int i=0;i<EBookReader.findNodeList(content, "dc:date").getLength();i++){
+            key = (EBookReader.findNodeList(content, "dc:date")).item(i).getAttributes().item(0).getTextContent();
+            value = EBookReader.findNodeList(content, "dc:date").item(i).getTextContent();
             metadata.addDate(key, value);
         }
-        for(int i=0;i<eBook.findNodeList("dc:subject").getLength();i++){
-            metadata.addSubject((eBook.findNodeList("dc:subject")).item(i).getTextContent());
+        for(int i=0;i<EBookReader.findNodeList(content, "dc:subject").getLength();i++){
+            metadata.addSubject((EBookReader.findNodeList(content, "dc:subject")).item(i).getTextContent());
         }
-        if(eBook.findNode(eBook.getContent(), "dc:source", true) != null){
-            metadata.setSource((eBook.findNode(eBook.getContent(), "dc:source", true)).getTextContent());
+        if(EBookReader.findNodeByName(content, "dc:source", true) != null){
+            metadata.setSource((EBookReader.findNodeByName(content, "dc:source", true)).getTextContent());
         }
-        for(int i=0;i<eBook.findNodeList("dc:rights").getLength();i++){
-            metadata.addRight((eBook.findNodeList("dc:rights")).item(i).getTextContent());
+        for(int i=0;i<EBookReader.findNodeList(content, "dc:rights").getLength();i++){
+            metadata.addRight((EBookReader.findNodeList(content, "dc:rights")).item(i).getTextContent());
         }
-        metadata.setLanguage((eBook.findNode(eBook.getContent(), "dc:language", true)).getTextContent().toUpperCase());
+        metadata.setLanguage((EBookReader.findNodeByName(content, "dc:language", true)).getTextContent().toUpperCase());
         return metadata;
     }
     public void fillFiles(EBook eBook, Path root) throws IOException{
@@ -95,7 +95,7 @@ public class EBookFactory {
         }
     }
     private void fillSpineMap() {
-        Node spineNode = eBook.findNode(eBook.getContent(), "spine", true);
+        Node spineNode = EBookReader.findNodeByName(eBook.getContent(), "spine", true);
         
         String key = null;
         String value;
@@ -105,26 +105,14 @@ public class EBookFactory {
                 Node spineElement = spineNode.getChildNodes().item(i);
                 if(spineElement.getNodeType() == 1){
                     key = spineElement.getAttributes().getNamedItem("idref").getNodeValue();
-                    value = (findHref(key));
+                    value = EBookReader.findNodeByAttribute(eBook.getContent(), "id", key, true).getAttributes().getNamedItem("href").getNodeValue();
                     eBook.addToSpineMap(key, value);
                 }
             }
         }
     }
-    private String findHref(String key) {
-        Node manifestNode = eBook.findNode(eBook.getContent(), "manifest", true);
-        if(manifestNode.hasChildNodes()){
-            for(int i=0;i<manifestNode.getChildNodes().getLength();i++){
-                Node manifestElement = manifestNode.getChildNodes().item(i);
-                if((manifestElement.getNodeType() == 1) && (manifestElement.getAttributes().getNamedItem("id").getNodeValue().equals(key))){
-                    return manifestElement.getAttributes().getNamedItem("href").getNodeValue();
-                }
-            }
-        }
-        return null;
-    }
     private void fillGuideMap() {
-        Node guideNode = eBook.findNode(eBook.getContent(), "guide", true);
+        Node guideNode = EBookReader.findNodeByName(eBook.getContent(), "guide", true);
         Map<String, String> guideMap = new HashMap<>();
         
         String key = null;

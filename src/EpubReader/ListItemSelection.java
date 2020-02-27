@@ -92,7 +92,7 @@ public class ListItemSelection extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void removeElementButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeElementButtonActionPerformed
-        eBookWriter.removeNode(tmpContent, "metadata", itemList.getSelectedValue());
+        eBookWriter.removeNode(tmpContent, itemList.getSelectedValue());
         for(int i=0;i<items.size();i++){
             if(items.get(i).equals(itemList.getSelectedValue())){
                 items.remove(i);

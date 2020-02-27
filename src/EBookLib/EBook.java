@@ -2,12 +2,12 @@ package EBookLib;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class EBook{
     private final String path;
@@ -36,6 +36,17 @@ public class EBook{
     }
     public void addFile(String filePath){
         fileList.add(filePath);
+    }
+    public void deleteFile(String fileName){
+        for (String file : fileList) {
+            if(file.endsWith(fileName)){
+                fileList.remove(file);
+                break;
+            }
+        }
+    }
+    public ArrayList<String> getFileList(){
+        return fileList;
     }
     public String findFile(String fileName){
         String filePath = null;
@@ -72,54 +83,16 @@ public class EBook{
         return guideMap;
     }
     public boolean hasCover(){
-        boolean isCover = false;
-        for(int i=0;i<content.getElementsByTagName("item").getLength();i++){
-            for(int j=0;j<content.getElementsByTagName("item").item(i).getAttributes().getLength();j++){
-                if(content.getElementsByTagName("item").item(i).getAttributes().item(j).getTextContent().toLowerCase().contains("cover")){
-                    isCover = true;
-                }
-            }
-            if(isCover == true){
-                break;
-            }
-        }
-        return isCover;
-    }
-    public Node findNode(Node root, String elementName, boolean deep) {
-        //Check to see if root has any children if not return null
-        if (!(root.hasChildNodes())){
-            return null;
-        }
-        //Root has children, so continue searching for them
-        Node matchingNode = null;
-        String nodeName = null;
-        Node child = null;
-
-        NodeList childNodes = root.getChildNodes();
-        int noChildren = childNodes.getLength();
-        for (int i = 0; i < noChildren; i++) {
-            if(matchingNode == null) {
-                child = childNodes.item(i);
-                nodeName = child.getNodeName();
-                if ((nodeName != null) && (nodeName.equals(elementName))){
-                    return child;
-                }
-                if (deep){
-                    matchingNode = findNode(child, elementName, deep);
-                }
-            }else{
-                break;
-            }
-        }
-        return matchingNode;
-    }
-    public NodeList findNodeList(String elementName){
-        return content.getElementsByTagName(elementName);
+        return (EBookReader.findNodeByAttribute(content, "id", "cover", true) != null);
     }
     public void close() throws IOException{
         fileSystem.close();
         fileList.removeAll(fileList);
         spineMap.clear();
         guideMap.clear();
+    }
+
+    void deleteFileFromList(String fileName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

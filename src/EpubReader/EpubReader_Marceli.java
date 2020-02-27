@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
@@ -20,6 +21,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 public class EpubReader_Marceli extends javax.swing.JFrame {
@@ -61,6 +63,10 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         plikZamknij = new javax.swing.JMenuItem();
         menuPublikacja = new javax.swing.JMenu();
         publikacjaDodajOkladke = new javax.swing.JMenuItem();
+        publikacjaUsunOkladke = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        publikacjaDodajRozdzial = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         showMetadane = new javax.swing.JMenuItem();
         publikacjaEdytujMetadane = new javax.swing.JMenuItem();
         menuNawigacja = new javax.swing.JMenu();
@@ -118,7 +124,6 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         });
         fontToolBar.add(fontSizeSpinner);
 
-        fontColor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         fontColor.setMaximumSize(new java.awt.Dimension(64, 22));
         fontToolBar.add(fontColor);
 
@@ -227,6 +232,24 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         });
         menuPublikacja.add(publikacjaDodajOkladke);
 
+        publikacjaUsunOkladke.setText("Usuń okładkę");
+        publikacjaUsunOkladke.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                publikacjaUsunOkladkeActionPerformed(evt);
+            }
+        });
+        menuPublikacja.add(publikacjaUsunOkladke);
+        menuPublikacja.add(jSeparator2);
+
+        publikacjaDodajRozdzial.setText("Dodaj rozdział");
+        publikacjaDodajRozdzial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                publikacjaDodajRozdzialActionPerformed(evt);
+            }
+        });
+        menuPublikacja.add(publikacjaDodajRozdzial);
+        menuPublikacja.add(jSeparator3);
+
         showMetadane.setText("Pokaż metadane");
         showMetadane.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -279,10 +302,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         } catch (IOException | ParserConfigurationException | SAXException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
-        eBook.getSpineMap().keySet().forEach((_item) -> {spineListModel.addElement(_item);
-        });
-        eBook.getGuideMap().keySet().forEach((_item) -> {guideListModel.addElement(_item);
-        });
+        load();
         fontToolBar.setEnabled(true);
         fontChoose.setEnabled(true);
         fontSizeSpinner.setEnabled(true);
@@ -369,10 +389,12 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
                 manifestNodeArguments.put("id", "Cover");
                 manifestNodeArguments.put("href", jfc.getSelectedFile().getName());
                 manifestNodeArguments.put("media-type", "application/xhtml+xml");
-                eBookWriter.appendNode(tmpContent, "manifest", "item", manifestNodeArguments, "");
                 
+                eBookWriter.appendNode(tmpContent, "manifest", "item", manifestNodeArguments, "");
                 eBookWriter.saveContentChanges(tmpContent);
                 eBookWriter.appendFile(coverpath);
+                eBook.addToSpineMap("Cover", jfc.getSelectedFile().getName());
+                load();
             } catch (IOException | TransformerException ex) {
                 Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -387,6 +409,39 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_formWindowClosing
+    private void publikacjaUsunOkladkeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaUsunOkladkeActionPerformed
+        if(eBook.hasCover()){
+            try {
+                Document tmpContent = eBook.getContent();
+                Node spineCover = EBookReader.findNodeByAttribute(eBook.getContent(), "idref", "cover", true);
+                String itemref = spineCover.getAttributes().getNamedItem("idref").getNodeValue();
+                Node manifestCover = EBookReader.findNodeByAttribute(eBook.getContent(), "id", itemref, true);
+                String fileName = manifestCover.getAttributes().getNamedItem("href").getNodeValue();
+                eBookWriter.removeNode(tmpContent, spineCover);
+                eBookWriter.removeNode(tmpContent, manifestCover);
+                eBookWriter.saveContentChanges(tmpContent);
+                eBookWriter.deleteFile(fileName);
+                eBook.getSpineMap().remove(itemref);
+                load();
+            } catch (IOException | TransformerException ex) {
+                Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Książka nie ma okładki");
+        }
+    }//GEN-LAST:event_publikacjaUsunOkladkeActionPerformed
+    private void publikacjaDodajRozdzialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaDodajRozdzialActionPerformed
+        AddChapter addChapter = new AddChapter(eBookWriter);
+        addChapter.setVisible(true);
+    }//GEN-LAST:event_publikacjaDodajRozdzialActionPerformed
+    public void load(){
+        spineListModel.removeAllElements();
+        eBook.getSpineMap().keySet().forEach((_item) -> {spineListModel.addElement(_item);
+        });
+        guideListModel.removeAllElements();
+        eBook.getGuideMap().keySet().forEach((_item) -> {guideListModel.addElement(_item);
+        });
+    }
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             new EpubReader_Marceli().setVisible(true);
@@ -408,6 +463,8 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JMenuBar mainMenu;
@@ -418,11 +475,14 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     private javax.swing.JMenuItem plikZnajdzPublikacje;
     private javax.swing.JTree plikiTree;
     private javax.swing.JMenuItem publikacjaDodajOkladke;
+    private javax.swing.JMenuItem publikacjaDodajRozdzial;
     private javax.swing.JMenuItem publikacjaEdytujMetadane;
+    private javax.swing.JMenuItem publikacjaUsunOkladke;
     private javax.swing.JMenuItem showMetadane;
     private javax.swing.JList<String> spineList;
     // End of variables declaration//GEN-END:variables
     private javax.swing.JFileChooser jfc;
     private DefaultListModel spineListModel;
     private DefaultListModel guideListModel;
+    private DefaultComboBoxModel model;
 }
