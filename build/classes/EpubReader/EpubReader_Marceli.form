@@ -71,7 +71,7 @@
             <Property name="text" type="java.lang.String" value="Publikacja"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="if (eBook == null){&#xa;menuPublikacja.setEnabled(false);&#xa;}"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="if (eBook == null){&#xa;    menuPublikacja.setEnabled(false);&#xa;}"/>
           </AuxValues>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="publikacjaDodajOkladke">
@@ -125,6 +125,19 @@
             <Property name="mnemonic" type="int" value="78"/>
             <Property name="text" type="java.lang.String" value="Nawigacja"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="if (eBook == null){&#xa;    menuNawigacja.setEnabled(false);&#xa;}"/>
+          </AuxValues>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Utw&#xf3;rz sekcj&#x119; Guide"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem3ActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
       </SubComponents>
     </Menu>
@@ -228,6 +241,7 @@
                       <SpinnerModel initial="14" maximum="150" minimum="8" numberType="java.lang.Integer" stepSize="2" type="number"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value="Rozmiar czcionki"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[64, 22]"/>
                     </Property>
@@ -242,18 +256,17 @@
                     <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="fontSizeSpinnerStateChanged"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="fontColor">
+                <Component class="javax.swing.JButton" name="fontColorButton">
                   <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[64, 22]"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="Zmie&#x144; kolor"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                    <Property name="focusable" type="boolean" value="false"/>
+                    <Property name="horizontalTextPosition" type="int" value="0"/>
+                    <Property name="verticalTextPosition" type="int" value="3"/>
                   </Properties>
-                  <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-                  </AuxValues>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fontColorButtonActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

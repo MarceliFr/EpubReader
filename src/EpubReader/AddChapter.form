@@ -25,23 +25,23 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="chapterFileChooser" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="chapterFileChooser" pref="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="jLabel1" min="-2" pref="124" max="-2" attributes="0"/>
+                      <Component id="jLabel1" min="-2" pref="104" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="chapterNameText" min="-2" pref="192" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="chapterNameTextField" min="-2" pref="198" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="addToGuideCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="addButton" min="-2" pref="73" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cancellButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -51,14 +51,16 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="chapterFileChooser" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="chapterNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="addToGuideCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="cancellButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="addButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel1" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="chapterNameText" alignment="3" max="32767" attributes="0"/>
+                      <Component id="addToGuideCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="addButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cancellButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="13" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -69,12 +71,14 @@
         <Property name="controlButtonsAreShown" type="boolean" value="false"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="FileNameExtensionFilter fnef = new FileNameExtensionFilter(&quot;cover&quot;, &quot;html&quot;);&#xa;chapterFileChooser.addChoosableFileFilter(fnef);&#xa;chapterFileChooser.setFileFilter(fnef);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="FileNameExtensionFilter fnef = new FileNameExtensionFilter(&quot;html files&quot;, &quot;html&quot;);&#xa;chapterFileChooser.addChoosableFileFilter(fnef);&#xa;chapterFileChooser.setFileFilter(fnef);"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JTextField" name="chapterNameTextField">
+    <Component class="javax.swing.JTextField" name="chapterNameText">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Nazwa rozdzia&#x142;y"/>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[99, 22]"/>
+        </Property>
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[99, 22]"/>
         </Property>
@@ -103,6 +107,9 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="chapterNameText"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Nazwa rozdzia&#x142;u"/>
       </Properties>
     </Component>

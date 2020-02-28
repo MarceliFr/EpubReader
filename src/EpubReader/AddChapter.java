@@ -1,13 +1,24 @@
 package EpubReader;
 
+import EBookLib.EBook;
 import EBookLib.EBookWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.transform.TransformerException;
+import org.w3c.dom.Document;
 
 public class AddChapter extends javax.swing.JFrame {
     private final EBookWriter eBookWriter;
+    private final EBook eBook;
     
-    public AddChapter(EBookWriter eBookWriter) {
+    public AddChapter(EBookWriter eBookWriter, EBook eBook) {
         this.eBookWriter = eBookWriter;
+        this.eBook = eBook;
         initComponents();
     }
     
@@ -16,7 +27,7 @@ public class AddChapter extends javax.swing.JFrame {
     private void initComponents() {
 
         chapterFileChooser = new javax.swing.JFileChooser();
-        chapterNameTextField = new javax.swing.JTextField();
+        chapterNameText = new javax.swing.JTextField();
         addToGuideCheckBox = new javax.swing.JCheckBox();
         cancellButton = new javax.swing.JButton();
         addButton = new javax.swing.JButton();
@@ -27,12 +38,12 @@ public class AddChapter extends javax.swing.JFrame {
         setResizable(false);
 
         chapterFileChooser.setControlButtonsAreShown(false);
-        FileNameExtensionFilter fnef = new FileNameExtensionFilter("cover", "html");
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("html files", "html");
         chapterFileChooser.addChoosableFileFilter(fnef);
         chapterFileChooser.setFileFilter(fnef);
 
-        chapterNameTextField.setText("Nazwa rozdziały");
-        chapterNameTextField.setMinimumSize(new java.awt.Dimension(99, 22));
+        chapterNameText.setMaximumSize(new java.awt.Dimension(99, 22));
+        chapterNameText.setMinimumSize(new java.awt.Dimension(99, 22));
 
         addToGuideCheckBox.setText("Dołącz do guide");
 
@@ -50,27 +61,28 @@ public class AddChapter extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setLabelFor(chapterNameText);
         jLabel1.setText("Nazwa rozdziału");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chapterFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(chapterFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(chapterNameText, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(chapterNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(addToGuideCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancellButton)
-                        .addContainerGap())))
+                        .addComponent(cancellButton)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -78,13 +90,14 @@ public class AddChapter extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(chapterFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chapterNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addToGuideCheckBox)
-                    .addComponent(cancellButton)
-                    .addComponent(addButton)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(chapterNameText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(addToGuideCheckBox)
+                        .addComponent(addButton)
+                        .addComponent(cancellButton)))
+                .addGap(0, 13, Short.MAX_VALUE))
         );
 
         pack();
@@ -93,15 +106,50 @@ public class AddChapter extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_cancellButtonActionPerformed
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        
+        if(chapterFileChooser.getSelectedFile() == null){
+            JOptionPane.showMessageDialog(this, "Nie wybrano pliku!", "Błąd odczytu", JOptionPane.ERROR_MESSAGE);
+        }else{
+            String filePath = chapterFileChooser.getSelectedFile().getAbsolutePath();
+            if(chapterNameText.getText().equals("")){
+                JOptionPane.showMessageDialog(this, "Wprowadź nazwę rozdziału!", "Błąd wprowadzania", JOptionPane.ERROR_MESSAGE);
+            }else{
+                try {
+                    String chapterName = chapterNameText.getText();
+                    Document tmpContent = eBook.getContent();
+                    Map<String, String> spineNodeArguments = new HashMap<>();
+                    spineNodeArguments.put("idref", chapterName);
+                    eBookWriter.appendNode(tmpContent, "spine", "itemref", spineNodeArguments, "");
+                    
+                    Map<String, String> manifestNodeArguments = new HashMap<>();
+                    manifestNodeArguments.put("id", chapterName);
+                    manifestNodeArguments.put("href", chapterFileChooser.getSelectedFile().getName());
+                    manifestNodeArguments.put("media-type", "application/xhtml+xml");
+                    eBookWriter.appendNode(tmpContent, "manifest", "item", manifestNodeArguments, "");
+                    
+                    if(addToGuideCheckBox.isSelected()){
+                        Map<String, String> guideNodeArguments = new HashMap<>();
+                        guideNodeArguments.put("href", chapterFileChooser.getSelectedFile().getName());
+                        guideNodeArguments.put("title", chapterName);
+                        guideNodeArguments.put("type", "text");
+                        eBookWriter.appendNode(tmpContent, "guide", "reference", guideNodeArguments, "");
+                    }
+                    eBookWriter.saveContentChanges(tmpContent);
+                    eBookWriter.appendFile(filePath);
+                    eBook.addToSpineMap(chapterName, chapterFileChooser.getSelectedFile().getName());
+                } catch (IOException | TransformerException ex) {
+                    Logger.getLogger(AddChapter.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    dispose();
+                }
+            }
+        }
     }//GEN-LAST:event_addButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JCheckBox addToGuideCheckBox;
     private javax.swing.JButton cancellButton;
     private javax.swing.JFileChooser chapterFileChooser;
-    private javax.swing.JTextField chapterNameTextField;
+    private javax.swing.JTextField chapterNameText;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
