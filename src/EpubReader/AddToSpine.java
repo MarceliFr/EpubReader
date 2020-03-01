@@ -13,25 +13,33 @@ import java.util.logging.Logger;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+
 import javax.xml.transform.TransformerException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import org.w3c.dom.NodeList;
 
-public class AddGuide extends javax.swing.JFrame {
+public class AddToSpine extends javax.swing.JFrame {
     private final EBookWriter eBookWriter;
     private final EBook eBook;
     private final Document tmpContent;
-
-    AddGuide(EBookWriter eBookWriter, EBook eBook) {
+    private final NodeList manifestNodes;
+    private final NodeList spineNodes;
+    
+    AddToSpine(EBookWriter eBookWriter, EBook eBook) {
         this.eBookWriter = eBookWriter;
         this.eBook = eBook;
         tmpContent = (Document) eBook.getContent().cloneNode(true);
         eBookWriter.appendNode(tmpContent, "package", "guide", null, "");
         
         filesListModel = new DefaultListModel();
-        newGuideListModel = new DefaultListModel();
+        newSpineListModel = new DefaultListModel();
+        
+        manifestNodes = EBookReader.findNodeList(tmpContent, "item");
+        spineNodes = EBookReader.findNodeList(tmpContent, "itemref");
+
         initComponents();
     }
 
@@ -43,11 +51,12 @@ public class AddGuide extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         availableFilesList = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        newGuideList = new javax.swing.JList<>();
+        newSpineList = new javax.swing.JList<>();
         addElementButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         cancellButton = new javax.swing.JButton();
         newGuideLabel = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -60,18 +69,30 @@ public class AddGuide extends javax.swing.JFrame {
         availableFilesLabel.setText("Możliwe pliki do wyboru");
 
         availableFilesList.setModel(filesListModel);
-        NodeList manifestNodeFiles = EBookReader.findNodeList(tmpContent, "item");
-        for(int i=0;i<manifestNodeFiles.getLength();i++){
-            if(manifestNodeFiles.item(i).getAttributes().getNamedItem("media-type").getNodeValue().equals("application/xhtml+xml")){
-                filesListModel.addElement(manifestNodeFiles.item(i).getAttributes().getNamedItem("href").getNodeValue());
+        boolean add = true;
+        for(int i=0;i<manifestNodes.getLength();i++){
+            Node itemId = manifestNodes.item(i).getAttributes().getNamedItem("id");
+            for(int j=0;j<spineNodes.getLength();j++){
+                Node itemRef = spineNodes.item(j).getAttributes().getNamedItem("idref");
+                if(itemId.getNodeValue().equals(itemRef.getNodeValue())){
+                    add = false;
+                    break;
+                }
             }
+            if(add == true){
+                filesListModel.addElement(manifestNodes.item(i).getAttributes().getNamedItem("href").getNodeValue());
+            }
+            add = true;
         }
         jScrollPane1.setViewportView(availableFilesList);
 
-        newGuideList.setModel(newGuideListModel);
-        jScrollPane2.setViewportView(newGuideList);
+        newSpineList.setModel(newSpineListModel);
+        for (String key : eBook.getSpineMap().keySet()) {
+            newSpineListModel.addElement(key + ": " + eBook.getSpineMap().get(key));
+        }
+        jScrollPane2.setViewportView(newSpineList);
 
-        addElementButton.setText("Dodaj element");
+        addElementButton.setText("Dodaj");
         addElementButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addElementButtonActionPerformed(evt);
@@ -92,7 +113,14 @@ public class AddGuide extends javax.swing.JFrame {
             }
         });
 
-        newGuideLabel.setText("Nowa sekcja Guide");
+        newGuideLabel.setText("Nowa sekcja Spine");
+
+        jButton1.setText("Usuń");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -105,13 +133,16 @@ public class AddGuide extends javax.swing.JFrame {
                     .addComponent(availableFilesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(newGuideLabel)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(saveButton)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(addElementButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(saveButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancellButton))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(newGuideLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(addElementButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cancellButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -126,7 +157,9 @@ public class AddGuide extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addElementButton)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(addElementButton)
+                            .addComponent(jButton1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(saveButton)
@@ -145,36 +178,45 @@ public class AddGuide extends javax.swing.JFrame {
             eBookWriter.saveContentChanges(tmpContent);
             dispose();
         } catch (IOException | TransformerException ex) {
-            Logger.getLogger(AddGuide.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddToSpine.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
     private void addElementButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addElementButtonActionPerformed
         if(availableFilesList.getSelectedValue() != null){
-            String fileName = availableFilesList.getSelectedValue();
-            String title = JOptionPane.showInputDialog(this, "Podaj tytuł rozdziału", null);
-            Map<String, String> guideNodeArguments = new HashMap<>();
-            guideNodeArguments.put("href", fileName);
-            guideNodeArguments.put("title", title);
-            guideNodeArguments.put("type", "text");
-            eBookWriter.appendNode(tmpContent, "guide", "reference", guideNodeArguments, "");
-            newGuideListModel.addElement(title);
+            String chapterName = JOptionPane.showInputDialog(this, "Podaj nazwę dodawanego rozdziału");
+            Map<String, String> spineNodeArguments = new HashMap<>();
+            spineNodeArguments.put("idref", chapterName);
+            eBookWriter.appendNode(tmpContent, "spine", "itemref", spineNodeArguments, "");
+            eBook.getSpineMap().put(chapterName, availableFilesList.getSelectedValue());
+            newSpineListModel.addElement(chapterName + ": " + availableFilesList.getSelectedValue());
             filesListModel.removeElementAt(availableFilesList.getSelectedIndex());
         }
     }//GEN-LAST:event_addElementButtonActionPerformed
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         dispose();
     }//GEN-LAST:event_formWindowClosing
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(newSpineList.getSelectedValue() != null){
+            String fileName = newSpineList.getSelectedValue().substring(newSpineList.getSelectedValue().indexOf(":")+2, newSpineList.getSelectedValue().length());
+            String itemref = newSpineList.getSelectedValue().substring(0, newSpineList.getSelectedValue().indexOf(":"));
+            eBookWriter.removeNode(tmpContent, EBookReader.findNodeByAttribute(tmpContent, "idref", itemref, true));
+            filesListModel.addElement(fileName);
+            newSpineListModel.removeElementAt(newSpineList.getSelectedIndex());
+            eBook.getSpineMap().remove(itemref);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addElementButton;
     private javax.swing.JLabel availableFilesLabel;
     private javax.swing.JList<String> availableFilesList;
     private javax.swing.JButton cancellButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel newGuideLabel;
-    private javax.swing.JList<String> newGuideList;
+    private javax.swing.JList<String> newSpineList;
     private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
     DefaultListModel filesListModel;
-    DefaultListModel newGuideListModel;
+    DefaultListModel newSpineListModel;
 }

@@ -8,6 +8,8 @@ import EBookLib.EBookWriter;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import java.io.IOException;
 
@@ -54,8 +56,8 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         eBookText = new javax.swing.JTextArea();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        plikiTree = new javax.swing.JTree();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        filesList = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         spineList = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -63,7 +65,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         mainMenu = new javax.swing.JMenuBar();
         menuPlik = new javax.swing.JMenu();
         plikZnajdzPublikacje = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        plikZamknijPublikacje = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         plikZamknij = new javax.swing.JMenuItem();
         menuPublikacja = new javax.swing.JMenu();
@@ -76,6 +78,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         publikacjaEdytujMetadane = new javax.swing.JMenuItem();
         menuNawigacja = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         jInternalFrame1.setVisible(true);
 
@@ -143,8 +146,10 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         });
         fontToolBar.add(fontColorButton);
 
+        eBookText.setEditable(false);
         eBookText.setColumns(20);
         eBookText.setRows(5);
+        eBookText.setDisabledTextColor(new java.awt.Color(255, 255, 255));
         eBookText.setLineWrap(true);
         eBookText.setWrapStyleWord(true);
         jScrollPane4.setViewportView(eBookText);
@@ -170,9 +175,16 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         jTabbedPane1.setMinimumSize(new java.awt.Dimension(160, 70));
         jTabbedPane1.setPreferredSize(new java.awt.Dimension(160, 100));
 
-        jScrollPane1.setViewportView(plikiTree);
+        filesListModel = new DefaultListModel();
+        filesList.setModel(filesListModel);
+        filesList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                filesListValueChanged(evt);
+            }
+        });
+        jScrollPane5.setViewportView(filesList);
 
-        jTabbedPane1.addTab("Pliki", jScrollPane1);
+        jTabbedPane1.addTab("Pliki", jScrollPane5);
 
         spineList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         spineListModel = new DefaultListModel();
@@ -215,13 +227,13 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         });
         menuPlik.add(plikZnajdzPublikacje);
 
-        jMenuItem1.setText("Zamknij publikację");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        plikZamknijPublikacje.setText("Zamknij publikację");
+        plikZamknijPublikacje.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                plikZamknijPublikacjeActionPerformed(evt);
             }
         });
-        menuPlik.add(jMenuItem1);
+        menuPlik.add(plikZamknijPublikacje);
         menuPlik.add(jSeparator1);
 
         plikZamknij.setText("Zamknij");
@@ -298,6 +310,14 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         });
         menuNawigacja.add(jMenuItem3);
 
+        jMenuItem1.setText("Edytuj sekcję Spine");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        menuNawigacja.add(jMenuItem1);
+
         mainMenu.add(menuNawigacja);
 
         setJMenuBar(mainMenu);
@@ -346,8 +366,9 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_publikacjaEdytujMetadaneActionPerformed
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void plikZamknijPublikacjeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plikZamknijPublikacjeActionPerformed
         try {
+            filesListModel.removeAllElements();
             spineListModel.removeAllElements();
             guideListModel.removeAllElements();
             fontToolBar.setEnabled(false);
@@ -361,7 +382,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_plikZamknijPublikacjeActionPerformed
     private void spineListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_spineListValueChanged
         try {
             if(((javax.swing.JList)evt.getSource()).getSelectedValue() != null){
@@ -397,7 +418,6 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     }//GEN-LAST:event_fontSizeSpinnerStateChanged
     private void fontChooseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_fontChooseItemStateChanged
         String newFontName = fontChoose.getSelectedItem().toString();
-        System.out.println(newFontName);
         Font newTextFont = new Font(newFontName, eBookText.getFont().getStyle(), eBookText.getFont().getSize());
         eBookText.setFont(newTextFont);
     }//GEN-LAST:event_fontChooseItemStateChanged
@@ -467,6 +487,12 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     private void publikacjaDodajRozdzialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaDodajRozdzialActionPerformed
         AddChapter addChapter = new AddChapter(eBookWriter, eBook);
         addChapter.setVisible(true);
+        addChapter.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent we) {
+                load();
+            }
+        });
     }//GEN-LAST:event_publikacjaDodajRozdzialActionPerformed
     private void fontColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontColorButtonActionPerformed
         Color newColor = null;
@@ -479,11 +505,40 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         if(EBookReader.findNodeByName(eBook.getContent(), "guide", true) == null){
             AddGuide addGuide = new AddGuide(eBookWriter, eBook);
             addGuide.setVisible(true);
+            addGuide.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent we) {
+                    load();
+                }
+            });
         }else{
             JOptionPane.showMessageDialog(this, "Ksiązka ma już sekcję guide");
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        AddToSpine addToSpine = new AddToSpine(eBookWriter, eBook);
+        addToSpine.setVisible(true);
+        addToSpine.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent we) {
+                load();
+            }
+        });
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void filesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_filesListValueChanged
+        try {
+            String text = eBookReader.readTextFromFile(filesList.getSelectedValue());
+            eBookText.setText(text);
+        } catch (IOException ex) {
+            Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_filesListValueChanged
     public void load(){
+        filesListModel.removeAllElements();
+        for(int i=0;i<eBook.getFileList().size();i++){
+            String fileName = eBook.getFileList().get(i).substring(eBook.getFileList().lastIndexOf("/")+1, eBook.getFileList().get(i).length());
+            filesListModel.addElement(fileName);
+        }
         spineListModel.removeAllElements();
         eBook.getSpineMap().keySet().forEach((_item) -> {spineListModel.addElement(_item);
         });
@@ -498,6 +553,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea eBookText;
+    private javax.swing.JList<String> filesList;
     private javax.swing.JComboBox<String> fontChoose;
     private javax.swing.JButton fontColorButton;
     private javax.swing.JSpinner fontSizeSpinner;
@@ -508,10 +564,10 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -522,8 +578,8 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     private javax.swing.JMenu menuPlik;
     private javax.swing.JMenu menuPublikacja;
     private javax.swing.JMenuItem plikZamknij;
+    private javax.swing.JMenuItem plikZamknijPublikacje;
     private javax.swing.JMenuItem plikZnajdzPublikacje;
-    private javax.swing.JTree plikiTree;
     private javax.swing.JMenuItem publikacjaDodajOkladke;
     private javax.swing.JMenuItem publikacjaDodajRozdzial;
     private javax.swing.JMenuItem publikacjaEdytujMetadane;
@@ -532,6 +588,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     private javax.swing.JList<String> spineList;
     // End of variables declaration//GEN-END:variables
     private javax.swing.JFileChooser jfc;
+    private DefaultListModel filesListModel;
     private DefaultListModel spineListModel;
     private DefaultListModel guideListModel;
     private DefaultComboBoxModel model;

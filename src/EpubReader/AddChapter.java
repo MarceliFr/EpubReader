@@ -1,6 +1,7 @@
 package EpubReader;
 
 import EBookLib.EBook;
+import EBookLib.EBookReader;
 import EBookLib.EBookWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -119,19 +120,25 @@ public class AddChapter extends javax.swing.JFrame {
                     Map<String, String> spineNodeArguments = new HashMap<>();
                     spineNodeArguments.put("idref", chapterName);
                     eBookWriter.appendNode(tmpContent, "spine", "itemref", spineNodeArguments, "");
+                    eBook.getSpineMap().put(chapterName, chapterFileChooser.getSelectedFile().getName());
                     
                     Map<String, String> manifestNodeArguments = new HashMap<>();
                     manifestNodeArguments.put("id", chapterName);
                     manifestNodeArguments.put("href", chapterFileChooser.getSelectedFile().getName());
                     manifestNodeArguments.put("media-type", "application/xhtml+xml");
                     eBookWriter.appendNode(tmpContent, "manifest", "item", manifestNodeArguments, "");
-                    
+                                        
                     if(addToGuideCheckBox.isSelected()){
-                        Map<String, String> guideNodeArguments = new HashMap<>();
-                        guideNodeArguments.put("href", chapterFileChooser.getSelectedFile().getName());
-                        guideNodeArguments.put("title", chapterName);
-                        guideNodeArguments.put("type", "text");
-                        eBookWriter.appendNode(tmpContent, "guide", "reference", guideNodeArguments, "");
+                        if(EBookReader.findNodeByName(tmpContent, "guide", true) != null){
+                            Map<String, String> guideNodeArguments = new HashMap<>();
+                            guideNodeArguments.put("href", chapterFileChooser.getSelectedFile().getName());
+                            guideNodeArguments.put("title", chapterName);
+                            guideNodeArguments.put("type", "text");
+                            eBookWriter.appendNode(tmpContent, "guide", "reference", guideNodeArguments, "");
+                            eBook.getGuideMap().put(chapterName, chapterFileChooser.getSelectedFile().getName());
+                        }else{
+                            JOptionPane.showMessageDialog(this, "Ksiązka nie ma guide. \n Element nie zostanie dodany.");
+                        }
                     }
                     eBookWriter.saveContentChanges(tmpContent);
                     eBookWriter.appendFile(filePath);

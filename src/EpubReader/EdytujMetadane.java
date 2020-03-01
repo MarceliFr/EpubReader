@@ -23,7 +23,7 @@ class EdytujMetadane extends javax.swing.JDialog {
     
     public EdytujMetadane(EBook eBook, EBookWriter eBookWriter) throws IOException, CloneNotSupportedException {
         this.eBook = eBook;
-        tmpContent = eBook.getContent();
+        tmpContent = (Document) eBook.getContent().cloneNode(true);
         tmpMetadata = (Metadata)eBook.getMetadata().clone();
         this.eBookWriter = eBookWriter;
         initComponents();
