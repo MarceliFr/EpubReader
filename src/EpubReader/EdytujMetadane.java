@@ -323,7 +323,7 @@ class EdytujMetadane extends javax.swing.JDialog {
     private void addCreatorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCreatorButtonActionPerformed
         String creator = JOptionPane.showInputDialog(this, "Dodaj autora", null);
         tmpMetadata.addCreator(creator);
-        eBookWriter.appendNode(tmpContent, "metadata", "dc:creator", null, creator);
+        eBookWriter.appendNode(tmpContent, "metadata", "dc:creator", null, creator, false);
     }//GEN-LAST:event_addCreatorButtonActionPerformed
     private void removeCreatorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeCreatorButtonActionPerformed
         if(tmpMetadata.getCreators().isEmpty()){
@@ -348,7 +348,7 @@ class EdytujMetadane extends javax.swing.JDialog {
                 eBookWriter.updateNode(tmpContent, "metadata", "dc:language", languageComboBox.getSelectedItem().toString().toLowerCase());
             }
             eBook.setMetadata(tmpMetadata);
-            eBookWriter.saveContentChanges(tmpContent);
+            eBookWriter.saveContentChanges(tmpContent, "content.opf");
             dispose();
         } catch (IOException | TransformerException ex) {
             Logger.getLogger(EdytujMetadane.class.getName()).log(Level.SEVERE, null, ex);
@@ -360,7 +360,7 @@ class EdytujMetadane extends javax.swing.JDialog {
     private void addPublisherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPublisherButtonActionPerformed
         String publisher = JOptionPane.showInputDialog(this, "Dodaj wydawcę", null);
         tmpMetadata.addPublisher(publisher);
-        eBookWriter.appendNode(tmpContent, "metadata", "dc:publisher", null, publisher);
+        eBookWriter.appendNode(tmpContent, "metadata", "dc:publisher", null, publisher, false);
     }//GEN-LAST:event_addPublisherButtonActionPerformed
     private void removePublisherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePublisherButtonActionPerformed
         if(tmpMetadata.getPublishers().isEmpty()){
@@ -397,7 +397,7 @@ class EdytujMetadane extends javax.swing.JDialog {
     private void addSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSubjectButtonActionPerformed
         String subject = JOptionPane.showInputDialog(this, "Dodaj temat", null);
         tmpMetadata.addSubject(subject);
-        eBookWriter.appendNode(tmpContent, "metadata", "dc:subject", null, subject);
+        eBookWriter.appendNode(tmpContent, "metadata", "dc:subject", null, subject, false);
     }//GEN-LAST:event_addSubjectButtonActionPerformed
     private void removeRightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeRightButtonActionPerformed
         if(tmpMetadata.getRights().isEmpty()){
@@ -410,7 +410,7 @@ class EdytujMetadane extends javax.swing.JDialog {
     private void addRightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRightButtonActionPerformed
         String right = JOptionPane.showInputDialog(this, "Dodaj uprawnienie", null);
         tmpMetadata.addRight(right);
-        eBookWriter.appendNode(tmpContent, "metadata", "dc:right", null, right);
+        eBookWriter.appendNode(tmpContent, "metadata", "dc:right", null, right, false);
     }//GEN-LAST:event_addRightButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCreatorButton;

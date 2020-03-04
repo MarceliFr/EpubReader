@@ -3,13 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EpubReader/AddGuide.java</file>
             <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EBookLib/EBookWriter.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EpubReader/AddToSpine.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EpubReader/AddChapter.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EpubReader/EpubReader_Marceli.java</file>
             <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EBookLib/EBook.java</file>
-            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EpubReader/EdytujMetadane.java</file>
+            <file>file:/C:/Users/Marcel/Documents/NetBeansProjects/JAVA/EpubReader/src/EpubReader/EpubReader_Marceli.java</file>
         </group>
     </open-files>
 </project-private>

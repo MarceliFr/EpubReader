@@ -17,6 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class EBookFactory {
@@ -49,7 +50,26 @@ public class EBookFactory {
         try (InputStream is = fileSystem.provider().newInputStream(contentPath)){
             content = dBuilder.parse(is);
         }
+        Document toc;
+        Path tocPath = fileSystem.getPath(eBook.findFile("toc.ncx"));
+        try (InputStream is = fileSystem.provider().newInputStream(tocPath)){
+            toc = dBuilder.parse(is);
+        }
         eBook.setContent(content);
+        eBook.setToc(toc);
+        int playorder = 0;
+        NodeList playList = EBookReader.findNodeList(toc, "navPoint");
+        for(int i=0;i<playList.getLength();i++){
+            Node play = playList.item(i).getAttributes().getNamedItem("playOrder");
+            int tmpPlay = Integer.parseInt(play.getNodeValue());
+            if(tmpPlay > playorder){
+                playorder = tmpPlay;
+            }
+        }
+        String navId = playList.item(0).getAttributes().getNamedItem("id").getNodeValue();
+        navId = navId.substring(0, navId.indexOf("-")+1);
+        System.out.println(navId);
+        eBook.setPlayOrder(playorder);
         eBook.setMetadata(readMetadata(eBook.getContent()));
         fillSpineMap();
         fillGuideMap();

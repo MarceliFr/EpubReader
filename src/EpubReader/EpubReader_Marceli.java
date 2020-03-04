@@ -10,6 +10,8 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 import java.io.IOException;
 
@@ -17,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -70,7 +73,6 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         plikZamknij = new javax.swing.JMenuItem();
         menuPublikacja = new javax.swing.JMenu();
         publikacjaDodajOkladke = new javax.swing.JMenuItem();
-        publikacjaUsunOkladke = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         publikacjaDodajRozdzial = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
@@ -259,14 +261,6 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             }
         });
         menuPublikacja.add(publikacjaDodajOkladke);
-
-        publikacjaUsunOkladke.setText("Usuń okładkę");
-        publikacjaUsunOkladke.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                publikacjaUsunOkladkeActionPerformed(evt);
-            }
-        });
-        menuPublikacja.add(publikacjaUsunOkladke);
         menuPublikacja.add(jSeparator2);
 
         publikacjaDodajRozdzial.setText("Dodaj rozdział");
@@ -425,29 +419,39 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         if(!eBook.hasCover()){
             try {
                 jfc = new javax.swing.JFileChooser();
-                FileNameExtensionFilter fnef = new FileNameExtensionFilter("cover", "html");
+                FileNameExtensionFilter fnef = new FileNameExtensionFilter("cover", "jpeg", "jpg");
                 jfc.addChoosableFileFilter(fnef);
                 jfc.setFileFilter(fnef);
                 jfc.showOpenDialog(null);
                 jfc.setName("Dodawanie okładki");
                 String coverpath = jfc.getSelectedFile().getAbsolutePath();
+                BufferedImage bimg = ImageIO.read(new File(coverpath));
+                int width = bimg.getWidth();
+                int height = bimg.getHeight();
+                eBookWriter.createCoverPage(width, height, jfc.getSelectedFile().getName());
+                Document tmpContent = (Document) eBook.getContent().cloneNode(true);
                 
-                Document tmpContent = eBook.getContent();
+                Map<String, String> metadataNodeArguments = new HashMap<>();
+                metadataNodeArguments.put("name", "cover");
+                metadataNodeArguments.put("content", "cover");
+                eBookWriter.appendNode(tmpContent, "metadata", "meta", metadataNodeArguments, "", false);
+                
                 Map<String, String> spineNodeArguments = new HashMap<>();
-                spineNodeArguments.put("idref", "Cover");
-                eBookWriter.appendNode(tmpContent, "spine", "itemref", spineNodeArguments, "");
+                spineNodeArguments.put("idref", "cover");
+                eBookWriter.appendNode(tmpContent, "spine", "itemref", spineNodeArguments, "", true);
                 
                 Map<String, String> manifestNodeArguments = new HashMap<>();
-                manifestNodeArguments.put("id", "Cover");
-                manifestNodeArguments.put("href", jfc.getSelectedFile().getName());
+                manifestNodeArguments.put("id", "cover");
+                manifestNodeArguments.put("href", "cover.xhtml");
                 manifestNodeArguments.put("media-type", "application/xhtml+xml");
                 
-                eBookWriter.appendNode(tmpContent, "manifest", "item", manifestNodeArguments, "");
-                eBookWriter.saveContentChanges(tmpContent);
+                eBookWriter.appendNode(tmpContent, "manifest", "item", manifestNodeArguments, "", false);
+                eBookWriter.saveContentChanges(tmpContent, "content.opf");
                 eBookWriter.appendFile(coverpath);
                 eBook.addToSpineMap("Cover", jfc.getSelectedFile().getName());
                 load();
-            } catch (IOException | TransformerException ex) {
+                
+            } catch (IOException | TransformerException | ParserConfigurationException ex) {
                 Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else{
@@ -463,27 +467,6 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_formWindowClosing
-    private void publikacjaUsunOkladkeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaUsunOkladkeActionPerformed
-        if(eBook.hasCover()){
-            try {
-                Document tmpContent = eBook.getContent();
-                Node spineCover = EBookReader.findNodeByAttribute(eBook.getContent(), "idref", "cover", true);
-                String itemref = spineCover.getAttributes().getNamedItem("idref").getNodeValue();
-                Node manifestCover = EBookReader.findNodeByAttribute(eBook.getContent(), "id", itemref, true);
-                String fileName = manifestCover.getAttributes().getNamedItem("href").getNodeValue();
-                eBookWriter.removeNode(tmpContent, spineCover);
-                eBookWriter.removeNode(tmpContent, manifestCover);
-                eBookWriter.saveContentChanges(tmpContent);
-                eBookWriter.deleteFile(fileName);
-                eBook.getSpineMap().remove(itemref);
-                load();
-            } catch (IOException | TransformerException ex) {
-                Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }else{
-            JOptionPane.showMessageDialog(this, "Książka nie ma okładki");
-        }
-    }//GEN-LAST:event_publikacjaUsunOkladkeActionPerformed
     private void publikacjaDodajRozdzialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaDodajRozdzialActionPerformed
         AddChapter addChapter = new AddChapter(eBookWriter, eBook);
         addChapter.setVisible(true);
@@ -583,7 +566,6 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     private javax.swing.JMenuItem publikacjaDodajOkladke;
     private javax.swing.JMenuItem publikacjaDodajRozdzial;
     private javax.swing.JMenuItem publikacjaEdytujMetadane;
-    private javax.swing.JMenuItem publikacjaUsunOkladke;
     private javax.swing.JMenuItem showMetadane;
     private javax.swing.JList<String> spineList;
     // End of variables declaration//GEN-END:variables

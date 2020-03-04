@@ -32,7 +32,7 @@ public class AddToSpine extends javax.swing.JFrame {
         this.eBookWriter = eBookWriter;
         this.eBook = eBook;
         tmpContent = (Document) eBook.getContent().cloneNode(true);
-        eBookWriter.appendNode(tmpContent, "package", "guide", null, "");
+        eBookWriter.appendNode(tmpContent, "package", "guide", null, "", false);
         
         filesListModel = new DefaultListModel();
         newSpineListModel = new DefaultListModel();
@@ -175,7 +175,7 @@ public class AddToSpine extends javax.swing.JFrame {
     }//GEN-LAST:event_cancellButtonActionPerformed
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         try {
-            eBookWriter.saveContentChanges(tmpContent);
+            eBookWriter.saveContentChanges(tmpContent, "content.opf");
             dispose();
         } catch (IOException | TransformerException ex) {
             Logger.getLogger(AddToSpine.class.getName()).log(Level.SEVERE, null, ex);
@@ -186,7 +186,7 @@ public class AddToSpine extends javax.swing.JFrame {
             String chapterName = JOptionPane.showInputDialog(this, "Podaj nazwę dodawanego rozdziału");
             Map<String, String> spineNodeArguments = new HashMap<>();
             spineNodeArguments.put("idref", chapterName);
-            eBookWriter.appendNode(tmpContent, "spine", "itemref", spineNodeArguments, "");
+            eBookWriter.appendNode(tmpContent, "spine", "itemref", spineNodeArguments, "", false);
             eBook.getSpineMap().put(chapterName, availableFilesList.getSelectedValue());
             newSpineListModel.addElement(chapterName + ": " + availableFilesList.getSelectedValue());
             filesListModel.removeElementAt(availableFilesList.getSelectedIndex());

@@ -14,6 +14,9 @@ public class EBook{
     private FileSystem fileSystem;
     private final ArrayList<String> fileList;
     private Document content;
+    private Document toc;
+    private int playorder;
+    private String navId;
     private final Map<String, String> spineMap;
     private final Map<String, String> guideMap;
     private Metadata metadata;
@@ -64,6 +67,27 @@ public class EBook{
     public Document getContent(){
         return content;
     }
+    public void setToc(Document toc) {
+        this.toc = toc;
+    }
+    public Document getToc(){
+        return toc;
+    }
+    public void setPlayOrder(int playorder){
+        this.playorder = playorder;
+    }
+    public void increasePlayOrder(){
+        playorder++;
+    }
+    public int getPlayOrder(){
+        return playorder;
+    }
+    public void setNavId(String navId){
+        this.navId = navId;
+    }
+    public String getNavId(){
+        return navId;
+    }
     public void setMetadata(Metadata metadata){
         this.metadata = metadata;
     }
@@ -83,7 +107,7 @@ public class EBook{
         return guideMap;
     }
     public boolean hasCover(){
-        return (EBookReader.findNodeByAttribute(content, "id", "cover", true) != null);
+        return (EBookReader.findNodeByAttribute(content, "id", "cover-image", true) != null);
     }
     public void close() throws IOException{
         fileSystem.close();
@@ -91,7 +115,6 @@ public class EBook{
         spineMap.clear();
         guideMap.clear();
     }
-
     void deleteFileFromList(String fileName) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

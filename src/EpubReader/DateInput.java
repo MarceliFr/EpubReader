@@ -1,6 +1,5 @@
 package EpubReader;
 
-import EBookLib.EBook;
 import EBookLib.EBookWriter;
 import EBookLib.Metadata;
 
@@ -139,7 +138,7 @@ public class DateInput extends javax.swing.JFrame {
                 tmpMetadata.addDate(datePropertyText.getText(), date.toString());
                 Map<String, String> dateMap = new HashMap<>();
                 dateMap.put("dc:date", datePropertyText.getText());
-                eBookWriter.appendNode(tmpContent, "metadata", "dc:date", dateMap, df.format(date));
+                eBookWriter.appendNode(tmpContent, "metadata", "dc:date", dateMap, df.format(date), false);
                 dispose();
             } catch (ParseException e) {
                 JOptionPane.showMessageDialog(this, "nieprawidłowy format daty");

@@ -28,7 +28,7 @@ public class AddGuide extends javax.swing.JFrame {
         this.eBookWriter = eBookWriter;
         this.eBook = eBook;
         tmpContent = (Document) eBook.getContent().cloneNode(true);
-        eBookWriter.appendNode(tmpContent, "package", "guide", null, "");
+        eBookWriter.appendNode(tmpContent, "package", "guide", null, "", false);
         
         filesListModel = new DefaultListModel();
         newGuideListModel = new DefaultListModel();
@@ -142,7 +142,7 @@ public class AddGuide extends javax.swing.JFrame {
     }//GEN-LAST:event_cancellButtonActionPerformed
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         try {
-            eBookWriter.saveContentChanges(tmpContent);
+            eBookWriter.saveContentChanges(tmpContent, "content.opf");
             dispose();
         } catch (IOException | TransformerException ex) {
             Logger.getLogger(AddGuide.class.getName()).log(Level.SEVERE, null, ex);
@@ -156,7 +156,7 @@ public class AddGuide extends javax.swing.JFrame {
             guideNodeArguments.put("href", fileName);
             guideNodeArguments.put("title", title);
             guideNodeArguments.put("type", "text");
-            eBookWriter.appendNode(tmpContent, "guide", "reference", guideNodeArguments, "");
+            eBookWriter.appendNode(tmpContent, "guide", "reference", guideNodeArguments, "", false);
             newGuideListModel.addElement(title);
             filesListModel.removeElementAt(availableFilesList.getSelectedIndex());
         }

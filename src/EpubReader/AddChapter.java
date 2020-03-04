@@ -116,17 +116,21 @@ public class AddChapter extends javax.swing.JFrame {
             }else{
                 try {
                     String chapterName = chapterNameText.getText();
-                    Document tmpContent = eBook.getContent();
+                    Document tmpContent = (Document) eBook.getContent().cloneNode(true);
+                    Document tmpToc = (Document) eBook.getToc().cloneNode(true);
+                    eBook.increasePlayOrder();
+                    eBookWriter.appendToToc(tmpToc, chapterFileChooser.getSelectedFile().getName(), chapterName, eBook.getNavId(), eBook.getPlayOrder());
+                    
                     Map<String, String> spineNodeArguments = new HashMap<>();
                     spineNodeArguments.put("idref", chapterName);
-                    eBookWriter.appendNode(tmpContent, "spine", "itemref", spineNodeArguments, "");
+                    eBookWriter.appendNode(tmpContent, "spine", "itemref", spineNodeArguments, "", false);
                     eBook.getSpineMap().put(chapterName, chapterFileChooser.getSelectedFile().getName());
                     
                     Map<String, String> manifestNodeArguments = new HashMap<>();
                     manifestNodeArguments.put("id", chapterName);
                     manifestNodeArguments.put("href", chapterFileChooser.getSelectedFile().getName());
                     manifestNodeArguments.put("media-type", "application/xhtml+xml");
-                    eBookWriter.appendNode(tmpContent, "manifest", "item", manifestNodeArguments, "");
+                    eBookWriter.appendNode(tmpContent, "manifest", "item", manifestNodeArguments, "", false);
                                         
                     if(addToGuideCheckBox.isSelected()){
                         if(EBookReader.findNodeByName(tmpContent, "guide", true) != null){
@@ -134,13 +138,17 @@ public class AddChapter extends javax.swing.JFrame {
                             guideNodeArguments.put("href", chapterFileChooser.getSelectedFile().getName());
                             guideNodeArguments.put("title", chapterName);
                             guideNodeArguments.put("type", "text");
-                            eBookWriter.appendNode(tmpContent, "guide", "reference", guideNodeArguments, "");
+                            eBookWriter.appendNode(tmpContent, "guide", "reference", guideNodeArguments, "", false);
                             eBook.getGuideMap().put(chapterName, chapterFileChooser.getSelectedFile().getName());
                         }else{
                             JOptionPane.showMessageDialog(this, "Ksiązka nie ma guide. \n Element nie zostanie dodany.");
                         }
                     }
-                    eBookWriter.saveContentChanges(tmpContent);
+                    eBookWriter.saveContentChanges(tmpContent, "content.opf");
+                    eBookWriter.saveContentChanges(tmpToc, "toc.ncx");
+                    eBook.setContent(tmpContent);
+                    eBook.setToc(tmpToc);
+                    System.out.println(EBookReader.findNodeByAttribute(tmpToc, "src", chapterFileChooser.getSelectedFile().getName(), true));
                     eBookWriter.appendFile(filePath);
                     eBook.addToSpineMap(chapterName, chapterFileChooser.getSelectedFile().getName());
                 } catch (IOException | TransformerException ex) {

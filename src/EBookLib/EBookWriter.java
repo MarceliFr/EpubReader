@@ -7,9 +7,13 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Map;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -28,7 +32,7 @@ public class EBookWriter {
     public EBookWriter(EBook eBook){
         this.eBook = eBook;
     }
-    public void appendNode(Document source, String parentNodeName, String newNodeName, Map<String, String> arguments, String textContent){
+    public void appendNode(Document source, String parentNodeName, String newNodeName, Map<String, String> arguments, String textContent, boolean first){
         Node appendNode = EBookReader.findNodeByName(source, parentNodeName, true);
         Element newNode = source.createElement(newNodeName);
         if(arguments != null){
@@ -39,12 +43,16 @@ public class EBookWriter {
         if(!"".equals(textContent)) {
             newNode.appendChild(source.createTextNode(textContent));
         }
-        appendNode.appendChild(newNode);
+        if(first){
+            appendNode.insertBefore(newNode, appendNode.getFirstChild());
+        }else{
+            appendNode.appendChild(newNode);
+        }
         source.normalize();
     }
     public void updateNode(Document source, String parentNodeName, String nodeName, String newText) {
         if(EBookReader.findNodeByName(source, nodeName, true) == null){
-            appendNode(source, parentNodeName, nodeName, null, newText);
+            appendNode(source, parentNodeName, nodeName, null, newText, false);
         }else{
             replaceText(EBookReader.findNodeByName(source, nodeName, true), newText);
         }
@@ -69,12 +77,29 @@ public class EBookWriter {
         toRemoveParent.removeChild(toRemoveNode);
         source.normalize();
     }
-    public void saveContentChanges(Document source) throws IOException, TransformerException{
+    public void appendToToc(Document source, String fileName, String chapterName, String navId, int playorder){
+        Node navMap = EBookReader.findNodeByName(source, "navMap", true);
+        Element navPoint = source.createElement("navPoint");
+        navPoint.setAttribute("playOrder", String.valueOf(playorder));
+        navId+= String.valueOf(playorder);
+        navPoint.setAttribute("id", navId);
+        Element navLabel = source.createElement("navLabel");
+        navPoint.appendChild(navLabel);
+        Element text = source.createElement("text");
+        navLabel.appendChild(text);
+        text.appendChild(source.createTextNode(chapterName));
+        Element content = source.createElement("content");
+        content.setAttribute("src", fileName);
+        navPoint.appendChild(content);
+        navMap.appendChild(navPoint);
+        source.normalize();
+    }
+    public void saveContentChanges(Document source, String fileName) throws IOException, TransformerException{
         DOMSource fromWhere = new DOMSource(source);
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        Path nf = eBook.getFileSystem().getPath(eBook.findFile("content.opf"));
+        Path nf = eBook.getFileSystem().getPath(eBook.findFile(fileName));
         try (Writer writer = Files.newBufferedWriter(nf, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
             StreamResult result = new StreamResult(writer);
             transformer.transform(fromWhere, result);
@@ -101,5 +126,53 @@ public class EBookWriter {
         }
         Path file = eBook.getFileSystem().getPath(filePath);
         Files.delete(file.toAbsolutePath());
+    }
+    public void createCoverPage(int width, int height, String imageName) throws IOException, TransformerException, ParserConfigurationException {
+        Path titlePath = Paths.get("cover.xhtml");
+        Path titlePage = Files.createFile(titlePath);
+        appendFile(titlePage.toString());
+        
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = dbf.newDocumentBuilder();
+        Document titlePageDoc = builder.newDocument();
+                
+        Element html = titlePageDoc.createElement("html");
+        html.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+        html.setAttribute("xml:lang", "en");
+        
+        Element head = titlePageDoc.createElement("head");
+        html.appendChild(head);
+
+        Element title = titlePageDoc.createElement("title");
+        title.setTextContent("Cover");
+        head.appendChild(title);
+        
+        Element body = titlePageDoc.createElement("body");
+        html.appendChild(body);
+        
+        Element div = titlePageDoc.createElement("div");
+        body.appendChild(div);
+        
+        Element svg = titlePageDoc.createElement("svg");
+        svg.setAttribute("version", "1.1");
+        svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+        svg.setAttribute("width", "100%");
+        svg.setAttribute("height", "100%");
+        String viewBox = "0 0 " + String.valueOf(width) + " " + String.valueOf(height);
+        System.out.println(viewBox);
+        svg.setAttribute("viewBox", viewBox);
+        svg.setAttribute("preserveAspectRatio", "none");
+        div.appendChild(svg);
+        
+        Element image = titlePageDoc.createElement("image");
+        image.setAttribute("width", String.valueOf(width));
+        image.setAttribute("height", String.valueOf(height));
+        image.setAttribute("xlink:href", imageName);
+        svg.appendChild(image);
+        
+        titlePageDoc.appendChild(html);
+        saveContentChanges(titlePageDoc, "cover.xhtml");
+        Files.delete(titlePath);
     }
 }
