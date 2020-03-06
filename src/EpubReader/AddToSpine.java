@@ -59,6 +59,7 @@ public class AddToSpine extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Edytuj sekcję spine");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -175,7 +176,7 @@ public class AddToSpine extends javax.swing.JFrame {
     }//GEN-LAST:event_cancellButtonActionPerformed
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         try {
-            eBookWriter.saveContentChanges(tmpContent, "content.opf");
+            eBookWriter.saveChanges(tmpContent, "content.opf");
             dispose();
         } catch (IOException | TransformerException ex) {
             Logger.getLogger(AddToSpine.class.getName()).log(Level.SEVERE, null, ex);

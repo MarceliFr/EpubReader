@@ -144,8 +144,8 @@ public class AddChapter extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(this, "Ksiązka nie ma guide. \n Element nie zostanie dodany.");
                         }
                     }
-                    eBookWriter.saveContentChanges(tmpContent, "content.opf");
-                    eBookWriter.saveContentChanges(tmpToc, "toc.ncx");
+                    eBookWriter.saveChanges(tmpContent, "content.opf");
+                    eBookWriter.saveChanges(tmpToc, "toc.ncx");
                     eBook.setContent(tmpContent);
                     eBook.setToc(tmpToc);
                     System.out.println(EBookReader.findNodeByAttribute(tmpToc, "src", chapterFileChooser.getSelectedFile().getName(), true));

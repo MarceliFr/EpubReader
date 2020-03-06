@@ -36,7 +36,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="plikZnajdzPublikacje">
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="Alt+Z"/>
+                  <KeyStroke key="Ctrl+F"/>
                 </Property>
                 <Property name="mnemonic" type="int" value="90"/>
                 <Property name="text" type="java.lang.String" value="Znajd&#x17a; publikacj&#x119;"/>
@@ -47,6 +47,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="plikZamknijPublikacje">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Alt+Z"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Zamknij publikacj&#x119;"/>
               </Properties>
               <Events>
@@ -57,6 +60,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="plikZamknij">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Alt+F4"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Zamknij"/>
               </Properties>
               <Events>
@@ -76,6 +82,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="publikacjaDodajOkladke">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Alt+O"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Dodaj ok&#x142;adk&#x119;"/>
               </Properties>
               <Events>
@@ -86,6 +95,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="publikacjaDodajRozdzial">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Alt+R"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Dodaj rozdzia&#x142;"/>
               </Properties>
               <Events>
@@ -96,6 +108,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="showMetadane">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Alt+M"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Poka&#x17c; metadane"/>
               </Properties>
               <Events>
@@ -104,6 +119,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="publikacjaEdytujMetadane">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Alt+E"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Edytuj metadane"/>
               </Properties>
               <Events>
@@ -123,6 +141,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Alt+G"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Utw&#xf3;rz sekcj&#x119; Guide"/>
               </Properties>
               <Events>
@@ -131,6 +152,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Alt+S"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Edytuj sekcj&#x119; Spine"/>
               </Properties>
               <Events>

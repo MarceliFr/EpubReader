@@ -31,7 +31,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 public class EpubReader_Marceli extends javax.swing.JFrame {
@@ -219,7 +218,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         menuPlik.setMnemonic('P');
         menuPlik.setText("Plik");
 
-        plikZnajdzPublikacje.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.ALT_MASK));
+        plikZnajdzPublikacje.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
         plikZnajdzPublikacje.setMnemonic('Z');
         plikZnajdzPublikacje.setText("Znajdź publikację");
         plikZnajdzPublikacje.addActionListener(new java.awt.event.ActionListener() {
@@ -229,6 +228,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         });
         menuPlik.add(plikZnajdzPublikacje);
 
+        plikZamknijPublikacje.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.ALT_MASK));
         plikZamknijPublikacje.setText("Zamknij publikację");
         plikZamknijPublikacje.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -238,6 +238,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         menuPlik.add(plikZamknijPublikacje);
         menuPlik.add(jSeparator1);
 
+        plikZamknij.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
         plikZamknij.setText("Zamknij");
         plikZamknij.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -254,6 +255,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             menuPublikacja.setEnabled(false);
         }
 
+        publikacjaDodajOkladke.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.ALT_MASK));
         publikacjaDodajOkladke.setText("Dodaj okładkę");
         publikacjaDodajOkladke.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -263,6 +265,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         menuPublikacja.add(publikacjaDodajOkladke);
         menuPublikacja.add(jSeparator2);
 
+        publikacjaDodajRozdzial.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK));
         publikacjaDodajRozdzial.setText("Dodaj rozdział");
         publikacjaDodajRozdzial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -272,6 +275,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         menuPublikacja.add(publikacjaDodajRozdzial);
         menuPublikacja.add(jSeparator3);
 
+        showMetadane.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.ALT_MASK));
         showMetadane.setText("Pokaż metadane");
         showMetadane.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -280,6 +284,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         });
         menuPublikacja.add(showMetadane);
 
+        publikacjaEdytujMetadane.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.ALT_MASK));
         publikacjaEdytujMetadane.setText("Edytuj metadane");
         publikacjaEdytujMetadane.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -296,6 +301,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             menuNawigacja.setEnabled(false);
         }
 
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem3.setText("Utwórz sekcję Guide");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -304,6 +310,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         });
         menuNawigacja.add(jMenuItem3);
 
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem1.setText("Edytuj sekcję Spine");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -341,16 +348,19 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             }
             eBookReader = new EBookReader(eBook);
             eBookWriter = new EBookWriter(eBook);
+            
+            load();
+            fontToolBar.setEnabled(true);
+            fontChoose.setEnabled(true);
+            fontSizeSpinner.setEnabled(true);
+            fontColorButton.setEnabled(true);
+            menuPublikacja.setEnabled(true);
+            menuNawigacja.setEnabled(true);
         } catch (IOException | ParserConfigurationException | SAXException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NullPointerException ex){
+            JOptionPane.showMessageDialog(this, "Niw wybrano pliku", "Błąd odczytu", JOptionPane.ERROR_MESSAGE);
         }
-        load();
-        fontToolBar.setEnabled(true);
-        fontChoose.setEnabled(true);
-        fontSizeSpinner.setEnabled(true);
-        fontColorButton.setEnabled(true);
-        menuPublikacja.setEnabled(true);
-        menuNawigacja.setEnabled(true);
     }//GEN-LAST:event_plikZnajdzPublikacjeActionPerformed
     private void publikacjaEdytujMetadaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publikacjaEdytujMetadaneActionPerformed
         try {
@@ -446,13 +456,15 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
                 manifestNodeArguments.put("media-type", "application/xhtml+xml");
                 
                 eBookWriter.appendNode(tmpContent, "manifest", "item", manifestNodeArguments, "", false);
-                eBookWriter.saveContentChanges(tmpContent, "content.opf");
+                eBookWriter.saveChanges(tmpContent, "content.opf");
                 eBookWriter.appendFile(coverpath);
                 eBook.addToSpineMap("Cover", jfc.getSelectedFile().getName());
                 load();
                 
             } catch (IOException | TransformerException | ParserConfigurationException ex) {
                 Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NullPointerException ex){
+                JOptionPane.showMessageDialog(this, "Niw wybrano pliku", "Błąd odczytu", JOptionPane.ERROR_MESSAGE);
             }
         }else{
             JOptionPane.showMessageDialog(this, "Książka ma już okładkę");

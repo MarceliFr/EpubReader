@@ -20,9 +20,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class EBookFactory {
-    private EBook eBook;
-    
+public class EBookFactory {    
     public EBookFactory(){}
     
     public boolean isEBook(String path) throws IOException {
@@ -37,6 +35,7 @@ public class EBookFactory {
         return mimetypeContent.equals("application/epub+zip");
     }
     public EBook readEBook(String eBookPath) throws ParserConfigurationException, IOException, SAXException{
+        EBook eBook;
         eBook = new EBook(eBookPath);
         File testFile = new File(eBookPath);
         FileSystem fileSystem = FileSystems.newFileSystem(testFile.toPath(), null);
@@ -71,8 +70,8 @@ public class EBookFactory {
         System.out.println(navId);
         eBook.setPlayOrder(playorder);
         eBook.setMetadata(readMetadata(eBook.getContent()));
-        fillSpineMap();
-        fillGuideMap();
+        fillSpineMap(eBook);
+        fillGuideMap(eBook);
         return eBook;
     }
     private Metadata readMetadata(Document content){
@@ -114,7 +113,7 @@ public class EBookFactory {
             }
         }
     }
-    private void fillSpineMap() {
+    private void fillSpineMap(EBook eBook) {
         Node spineNode = EBookReader.findNodeByName(eBook.getContent(), "spine", true);
         
         String key = null;
@@ -131,7 +130,7 @@ public class EBookFactory {
             }
         }
     }
-    private void fillGuideMap() {
+    private void fillGuideMap(EBook eBook) {
         Node guideNode = EBookReader.findNodeByName(eBook.getContent(), "guide", true);
         Map<String, String> guideMap = new HashMap<>();
         

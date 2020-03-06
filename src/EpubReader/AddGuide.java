@@ -50,6 +50,8 @@ public class AddGuide extends javax.swing.JFrame {
         newGuideLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Utwórz sekcję guide");
+        setAlwaysOnTop(true);
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -142,7 +144,7 @@ public class AddGuide extends javax.swing.JFrame {
     }//GEN-LAST:event_cancellButtonActionPerformed
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         try {
-            eBookWriter.saveContentChanges(tmpContent, "content.opf");
+            eBookWriter.saveChanges(tmpContent, "content.opf");
             dispose();
         } catch (IOException | TransformerException ex) {
             Logger.getLogger(AddGuide.class.getName()).log(Level.SEVERE, null, ex);

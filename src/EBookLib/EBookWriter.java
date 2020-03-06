@@ -94,7 +94,7 @@ public class EBookWriter {
         navMap.appendChild(navPoint);
         source.normalize();
     }
-    public void saveContentChanges(Document source, String fileName) throws IOException, TransformerException{
+    public void saveChanges(Document source, String fileName) throws IOException, TransformerException{
         DOMSource fromWhere = new DOMSource(source);
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
@@ -172,7 +172,7 @@ public class EBookWriter {
         svg.appendChild(image);
         
         titlePageDoc.appendChild(html);
-        saveContentChanges(titlePageDoc, "cover.xhtml");
+        saveChanges(titlePageDoc, "cover.xhtml");
         Files.delete(titlePath);
     }
 }

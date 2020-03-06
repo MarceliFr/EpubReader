@@ -348,7 +348,7 @@ class EdytujMetadane extends javax.swing.JDialog {
                 eBookWriter.updateNode(tmpContent, "metadata", "dc:language", languageComboBox.getSelectedItem().toString().toLowerCase());
             }
             eBook.setMetadata(tmpMetadata);
-            eBookWriter.saveContentChanges(tmpContent, "content.opf");
+            eBookWriter.saveChanges(tmpContent, "content.opf");
             dispose();
         } catch (IOException | TransformerException ex) {
             Logger.getLogger(EdytujMetadane.class.getName()).log(Level.SEVERE, null, ex);
