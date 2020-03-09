@@ -41,6 +41,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     
     public EpubReader_Marceli() {
         initComponents();
+        fontChoose.setSelectedItem(eBookText.getFont().getFontName());
     }
 
     @SuppressWarnings("unchecked")
@@ -112,7 +113,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
         fontChoose.setMinimumSize(new java.awt.Dimension(128, 22));
         fontChoose.setPreferredSize(new java.awt.Dimension(128, 22));
         String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-        for(int i=0; i<fonts.length; i++ ){
+        for(int i=0; i<fonts.length; i++){
             fontChoose.addItem(fonts[i]);
         }
         fontChoose.addItemListener(new java.awt.event.ItemListener() {
@@ -149,6 +150,7 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
 
         eBookText.setEditable(false);
         eBookText.setColumns(20);
+        eBookText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         eBookText.setRows(5);
         eBookText.setDisabledTextColor(new java.awt.Color(255, 255, 255));
         eBookText.setLineWrap(true);
@@ -327,7 +329,9 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     private void plikZamknijActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plikZamknijActionPerformed
         try {
-            eBook.close();
+            if(eBook != null){
+                eBook.close();
+            }
             System.exit(0);
         } catch (IOException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
@@ -345,20 +349,22 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
             EBookFactory eBookFactory = new EBookFactory();
             if(eBookFactory.isEBook(path) == true){
                 eBook = eBookFactory.readEBook(path);
-            }
-            eBookReader = new EBookReader(eBook);
-            eBookWriter = new EBookWriter(eBook);
+                
+                eBookReader = new EBookReader(eBook);
+                eBookWriter = new EBookWriter(eBook);
             
-            load();
-            fontToolBar.setEnabled(true);
-            fontChoose.setEnabled(true);
-            fontSizeSpinner.setEnabled(true);
-            fontColorButton.setEnabled(true);
-            menuPublikacja.setEnabled(true);
-            menuNawigacja.setEnabled(true);
+                load();
+                
+                fontToolBar.setEnabled(true);
+                fontChoose.setEnabled(true);
+                fontSizeSpinner.setEnabled(true);
+                fontColorButton.setEnabled(true);
+                menuPublikacja.setEnabled(true);
+                menuNawigacja.setEnabled(true);
+            }
         } catch (IOException | ParserConfigurationException | SAXException ex) {
             Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NullPointerException ex){
+        }catch (NullPointerException ex){
             JOptionPane.showMessageDialog(this, "Niw wybrano pliku", "Błąd odczytu", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_plikZnajdzPublikacjeActionPerformed
@@ -460,7 +466,6 @@ public class EpubReader_Marceli extends javax.swing.JFrame {
                 eBookWriter.appendFile(coverpath);
                 eBook.addToSpineMap("Cover", jfc.getSelectedFile().getName());
                 load();
-                
             } catch (IOException | TransformerException | ParserConfigurationException ex) {
                 Logger.getLogger(EpubReader_Marceli.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NullPointerException ex){

@@ -137,7 +137,7 @@ public class DateInput extends javax.swing.JFrame {
                 Date date = df.parse(dateText.getText());
                 tmpMetadata.addDate(datePropertyText.getText(), date.toString());
                 Map<String, String> dateMap = new HashMap<>();
-                dateMap.put("dc:date", datePropertyText.getText());
+                dateMap.put("opf:event", datePropertyText.getText());
                 eBookWriter.appendNode(tmpContent, "metadata", "dc:date", dateMap, df.format(date), false);
                 dispose();
             } catch (ParseException e) {

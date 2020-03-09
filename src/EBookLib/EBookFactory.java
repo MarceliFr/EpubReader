@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,15 +25,23 @@ public class EBookFactory {
     public EBookFactory(){}
     
     public boolean isEBook(String path) throws IOException {
-        File testFile = new File(path);
-        String mimetypeContent;
-        try (FileSystem fileSystem = FileSystems.newFileSystem(testFile.toPath(), null)) {
-            Path content = fileSystem.getPath("/mimetype");
-            try (InputStream is = fileSystem.provider().newInputStream(content)){
-                mimetypeContent = inputStreamToString(is);
+        boolean isEBook = false;
+        try{
+            File testFile = new File(path);
+            String mimetypeContent = null;
+            try (FileSystem fileSystem = FileSystems.newFileSystem(testFile.toPath(), null)) {
+                Path mimetypePath = fileSystem.getPath("/mimetype");
+                try (InputStream is = fileSystem.provider().newInputStream(mimetypePath)){
+                    mimetypeContent = inputStreamToString(is);
+                    if(mimetypeContent.equals("application/epub+zip")){
+                        isEBook = true;
+                    }
+                }
             }
+        } catch (java.nio.file.NoSuchFileException ex){
+            JOptionPane.showMessageDialog(null, "Publikacja jest uszkodzona lub nieczytelna!", "Błąd odczytu", JOptionPane.ERROR_MESSAGE);
         }
-        return mimetypeContent.equals("application/epub+zip");
+        return isEBook;
     }
     public EBook readEBook(String eBookPath) throws ParserConfigurationException, IOException, SAXException{
         EBook eBook;
@@ -44,13 +53,22 @@ public class EBookFactory {
         fillFiles(eBook, root);
         
         DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document container;
+        Path containerPath = fileSystem.getPath(eBook.findFile("container.xml"));
+        try (InputStream is = fileSystem.provider().newInputStream(containerPath)){
+            container = dBuilder.parse(is);
+        }
+        String contentName = EBookReader.findNodeByName(container, "rootfile", true).getAttributes().getNamedItem("full-path").getTextContent();
+        
         Document content;
-        Path contentPath = fileSystem.getPath(eBook.findFile("content.opf"));
+        Path contentPath = fileSystem.getPath(contentName);
         try (InputStream is = fileSystem.provider().newInputStream(contentPath)){
             content = dBuilder.parse(is);
         }
         Document toc;
-        Path tocPath = fileSystem.getPath(eBook.findFile("toc.ncx"));
+        String tocName = ("toc.ncx");
+        tocName = tocName.substring(tocName.lastIndexOf('/')+1, tocName.length());
+        Path tocPath = fileSystem.getPath(eBook.findFile(tocName));
         try (InputStream is = fileSystem.provider().newInputStream(tocPath)){
             toc = dBuilder.parse(is);
         }
@@ -67,7 +85,6 @@ public class EBookFactory {
         }
         String navId = playList.item(0).getAttributes().getNamedItem("id").getNodeValue();
         navId = navId.substring(0, navId.indexOf("-")+1);
-        System.out.println(navId);
         eBook.setPlayOrder(playorder);
         eBook.setMetadata(readMetadata(eBook.getContent()));
         fillSpineMap(eBook);
@@ -86,7 +103,11 @@ public class EBookFactory {
         String key = null;
         String value;
         for(int i=0;i<EBookReader.findNodeList(content, "dc:date").getLength();i++){
-            key = (EBookReader.findNodeList(content, "dc:date")).item(i).getAttributes().item(0).getTextContent();
+            if((EBookReader.findNodeList(content, "dc:date")).item(i).getAttributes().getNamedItem("opf:event") != null){
+                key = (EBookReader.findNodeList(content, "dc:date")).item(i).getAttributes().getNamedItem("opf:event").getTextContent();
+            }else{
+                key = "Unknown event";
+            }
             value = EBookReader.findNodeList(content, "dc:date").item(i).getTextContent();
             metadata.addDate(key, value);
         }

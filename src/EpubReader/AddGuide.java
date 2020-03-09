@@ -145,6 +145,7 @@ public class AddGuide extends javax.swing.JFrame {
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         try {
             eBookWriter.saveChanges(tmpContent, "content.opf");
+            eBook.setContent(tmpContent);
             dispose();
         } catch (IOException | TransformerException ex) {
             Logger.getLogger(AddGuide.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,6 +160,7 @@ public class AddGuide extends javax.swing.JFrame {
             guideNodeArguments.put("title", title);
             guideNodeArguments.put("type", "text");
             eBookWriter.appendNode(tmpContent, "guide", "reference", guideNodeArguments, "", false);
+            eBook.addToGuideMap(title, fileName);
             newGuideListModel.addElement(title);
             filesListModel.removeElementAt(availableFilesList.getSelectedIndex());
         }

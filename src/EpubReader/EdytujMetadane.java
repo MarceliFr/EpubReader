@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
@@ -18,12 +19,14 @@ import org.w3c.dom.Document;
 class EdytujMetadane extends javax.swing.JDialog {
     private final EBook eBook;
     private final Document tmpContent;
+    private final Document tmptoc;
     private final Metadata tmpMetadata;
     private final EBookWriter eBookWriter;
     
     public EdytujMetadane(EBook eBook, EBookWriter eBookWriter) throws IOException, CloneNotSupportedException {
         this.eBook = eBook;
         tmpContent = (Document) eBook.getContent().cloneNode(true);
+        tmptoc = (Document) eBook.getToc().cloneNode(true);
         tmpMetadata = (Metadata)eBook.getMetadata().clone();
         this.eBookWriter = eBookWriter;
         initComponents();
@@ -338,6 +341,9 @@ class EdytujMetadane extends javax.swing.JDialog {
             if(!titleText.getText().equals(eBook.getMetadata().getTitle())){
                 tmpMetadata.setTitle(titleText.getText());
                 eBookWriter.updateNode(tmpContent, "metadata", "dc:title", titleText.getText());
+                eBookWriter.updateNode(tmptoc, "docTitle", "text", titleText.getText());
+                eBookWriter.saveChanges(tmptoc, "toc.ncx");
+                eBook.setToc(tmptoc);
             }
             if(!sourceText.getText().equals(eBook.getMetadata().getSource())){
                 tmpMetadata.setSource(sourceText.getText());
@@ -347,6 +353,7 @@ class EdytujMetadane extends javax.swing.JDialog {
                 tmpMetadata.setLanguage(languageComboBox.getSelectedItem().toString());
                 eBookWriter.updateNode(tmpContent, "metadata", "dc:language", languageComboBox.getSelectedItem().toString().toLowerCase());
             }
+            eBook.setContent(tmpContent);
             eBook.setMetadata(tmpMetadata);
             eBookWriter.saveChanges(tmpContent, "content.opf");
             dispose();

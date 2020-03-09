@@ -107,7 +107,14 @@ public class EBook{
         return guideMap;
     }
     public boolean hasCover(){
-        return (EBookReader.findNodeByAttribute(content, "id", "cover-image", true) != null);
+        boolean isCover = false;
+        if(EBookReader.findNodeByAttribute(content, "id", "cover-image", true) != null){
+            isCover = true;
+        }
+        if(EBookReader.findNodeByAttribute(content, "id", "cover", true) != null){
+            isCover = true;
+        }
+        return isCover;
     }
     public void close() throws IOException{
         fileSystem.close();
